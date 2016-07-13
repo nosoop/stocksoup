@@ -20,7 +20,7 @@
  * 
  * @return			Index for the created outline effect entity.
  */
-stock int AddGlowModel(int entity, TFTeam team = TFTeam_Unassigned) {
+stock int TF2_AttachGlowModel(int entity, TFTeam team = TFTeam_Unassigned) {
 	char model[PLATFORM_MAX_PATH];
 	GetEntPropString(entity, Prop_Data, "m_ModelName", model, PLATFORM_MAX_PATH);
 	
