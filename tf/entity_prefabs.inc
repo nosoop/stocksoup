@@ -1,5 +1,5 @@
-#if !defined __tf_glow_model_included
-	#define __tf_glow_model_included
+#if !defined __tf_entity_prefabs_included
+	#define __tf_entity_prefabs_included
 #else
 	#endinput
 #endif
@@ -8,6 +8,18 @@
 #include <tf2>
 #pragma newdecls required
 
+/**
+ * Attaches the outline effect to an entity so it can be seen through walls.
+ * 
+ * Stock referenced from the Glowing MvM money plugin:
+ * https://forums.alliedmods.net/showthread.php?t=280942
+ * 
+ * @param entity	The entity that will receive an outline effect.
+ * @param team		The team associated with the outline effect entity.
+ * 					(Doesn't actually work.)
+ * 
+ * @return			Index for the created outline effect entity.
+ */
 stock int AddGlowModel(int entity, TFTeam team = TFTeam_Unassigned) {
 	char model[PLATFORM_MAX_PATH];
 	GetEntPropString(entity, Prop_Data, "m_ModelName", model, PLATFORM_MAX_PATH);
