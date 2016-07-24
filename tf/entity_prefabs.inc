@@ -6,7 +6,12 @@
 
 #pragma newdecls optional
 #include <tf2>
+#include <stocksoup/entity_tools>
 #pragma newdecls required
+
+#define EF_BONEMERGE	(1 << 0)
+#define EF_NOSHADOW		16
+#define EF_NOINTERP		8
 
 /**
  * Attaches the outline effect to an entity so it can be seen through walls.
@@ -20,7 +25,7 @@
  * 
  * @return			Index for the created outline effect entity.
  */
-stock int TF2_AttachGlowModel(int entity, TFTeam team = TFTeam_Unassigned) {
+stock int TF2_AttachBasicGlow(int entity, TFTeam team = TFTeam_Unassigned) {
 	char model[PLATFORM_MAX_PATH];
 	GetEntPropString(entity, Prop_Data, "m_ModelName", model, PLATFORM_MAX_PATH);
 	
@@ -41,10 +46,8 @@ stock int TF2_AttachGlowModel(int entity, TFTeam team = TFTeam_Unassigned) {
 			
 			int iFlags = GetEntProp(prop, Prop_Send, "m_fEffects");
 			
-			int efBoneMerge = (1 << 0), efNoShadow = 16, efNoInterp = 8;
-			
 			SetEntProp(prop, Prop_Send, "m_fEffects",
-					iFlags | efBoneMerge | efNoShadow | efNoInterp);
+					iFlags | EF_BONEMERGE | EF_NOSHADOW | EF_NOINTERP);
 
 			SetVariantString("!activator");
 			AcceptEntityInput(prop, "SetParent", entity);
@@ -55,4 +58,25 @@ stock int TF2_AttachGlowModel(int entity, TFTeam team = TFTeam_Unassigned) {
 		return prop;
 	}
 	return -1;
+}
+
+/**
+ * Attaches a colored glow to an entity.  Did some tests; SetTransmit doesn't work with glows
+ * via `tf_glow`.
+ */
+stock int TF2_AttachColoredGlow(int entity, int rgba[4]) {
+	int glow = CreateEntityByName("tf_glow");
+	
+	if (IsValidEntity(glow)) {
+		char glowTarget[PLATFORM_MAX_PATH];
+		
+		GetEntityTargetName(entity, glowTarget, sizeof(glowTarget), true);
+		DispatchKeyValue(glow, "target", glowTarget);
+		
+		DispatchSpawn(glow);
+		
+		SetVariantColor(rgba);
+		AcceptEntityInput(glow, "SetGlowColor");
+	}
+	return glow;
 }
