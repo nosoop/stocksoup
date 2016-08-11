@@ -23,4 +23,5 @@ A collection of various, mostly one-off SourceMod stock functions.  They're not 
 Pretty simple:
 
 *   Base directory has stocks applicable to all games.
-*   Subdirectories have stocks applicable to a specific mod.  Mainly TF2, since that's the only game I write for.
+*	The `sdkports/` directory contains ports of select Source SDK functions.
+*   Other subdirectories have stocks applicable to a specific mod.  Mainly TF2, since that's the only game I write for.
