@@ -2,8 +2,9 @@
  * A list of achievements in Team Fortress 2 based on achievement ID.
  * 
  * Sourced from https://wiki.alliedmods.net/Achievement_IDs and gratuitous abuse of the
- * "achievement_earned" event, plus a good amount of typing saved by letting Python handle the
- * conversion of SNAKE_CASE from TF2's language files to TitleCase.
+ * "achievement_earned" event, plus a good amount of typing saved by letting Python format the
+ * language entries into enum values (converting SNAKE_CASE to TitleCase and adding the English
+ * achievement name as a comment next to it).
  */
 
 #if defined __stocksoup_tf_enum_achievements_included
@@ -558,6 +559,7 @@ enum TFAchievements {
 	Achievement_MvMMedicReviveTeammates, // Reanimator 2 (2350)
 	Achievement_MvMRocketSpecialistKillGrind, // Robot Flush
 	Achievement_MvMRocketSpecialistStunGrind, // Dazed And Defused
+	
 	
 	// 2400: Astro-chievements
 	Achievement_MapsDoomsdaySoloCapture = 2401, // Mission Control
