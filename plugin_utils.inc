@@ -24,7 +24,8 @@
  * Unloads a plugin by file name.
  */
 stock bool UnloadPluginFile(const char[] fileName) {
-	// TODO make sure plugin is currently loaded?
+	// TODO make sure plugin is currently in memory
+	// file might not exist anymore but still can be unloaded
 	return PerformPluginCommand("unload", fileName);
 }
 
@@ -98,6 +99,8 @@ stock void UnloadPlugin(Handle plugin = INVALID_HANDLE) {
  * Reloads a plugin given its handle.
  */
 stock void ReloadPlugin(Handle plugin = INVALID_HANDLE) {
+	char fileName[PLATFORM_MAX_PATH];
+	
 	GetPluginFilename(plugin, fileName, sizeof(fileName));
 	ReloadPluginFile(fileName);
 }
@@ -106,6 +109,8 @@ stock void ReloadPlugin(Handle plugin = INVALID_HANDLE) {
  * Disables a plugin given its handle.
  */
 stock void DisablePlugin(Handle plugin = INVALID_HANDLE, bool unload = true) {
+	char fileName[PLATFORM_MAX_PATH];
+	
 	GetPluginFilename(plugin, fileName, sizeof(fileName));
 	DisablePluginFile(fileName, unload);
 }
