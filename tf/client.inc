@@ -1,8 +1,12 @@
-#if defined __client_effects_tf_included
+/**
+ * Provides stocks for client (i.e., the game with a human controlling the character) functions.
+ */
+
+#if defined __stocksoup_tf_client_included
 	#endinput
 #endif
 
-#define __client_effects_tf_included
+#define __stocksoup_tf_client_included
 
 #include <tf2_stocks>
 
