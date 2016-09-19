@@ -8,6 +8,7 @@
 
 #define __stocksoup_tf_client_included
 
+#include <stocksoup/client>
 #include <tf2_stocks>
 
 /**

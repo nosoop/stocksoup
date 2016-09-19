@@ -1,8 +1,8 @@
-#if defined __stocksoup_client_effects_included
+#if defined __stocksoup_client_included
 	#endinput
 #endif
 
-#define __stocksoup_client_effects_included
+#define __stocksoup_client_included
 
 /**
  * Sets a client's overlay to the specified VMT file.  Blank to remove the overlay.
