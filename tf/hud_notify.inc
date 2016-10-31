@@ -1,3 +1,13 @@
+/**
+ * Provides stocks that deal with user messages.
+ */
+
+#if defined __stocksoup_tf_hud_notify_included
+	#endinput
+#endif
+
+#define __stocksoup_tf_hud_notify_included
+
 #include <tf2>
 
 stock void TF_HudNotifyCustom(int client, const char[] icon, TFTeam team, const char[] format,
