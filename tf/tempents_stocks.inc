@@ -4,7 +4,8 @@
 
 #define __stocksoup_tf_tempents_stocks_included
 
-#include <sdktools_tempents_stocks>
+#include <sdktools_stringtables>
+#include <sdktools_tempents>
 
 /**
  * Enum values from `src/game/shared/particle_parse.h`.
@@ -19,19 +20,19 @@ enum ParticleAttachment_t {
 };
 
 /**
- * Sets up a particle effect with the values listed.
+ * Sets up a TF2 particle effect.
  * 
  * Attachment points are dependent on the entity; `tf_fx.cpp` normally pulls this index by
  * calling `pEntity->GetBaseAnimating()->LookupAttachment( pszAttachmentName )`.
  * 
- * @param name			Name of particle effect.
- * @param vecOrigin		Position of the particle effect.
- * @param vecStart		Starting position of the particle effect.
- * @param vecAngles		Angle of particle effect.
- * @param entity		Entity that the particle effect is applied to.
- * @param attachType	Attachment type (see ParticleAttachment_t for valid values).
- * @param attachPoint	Attachment point value.
- * @param bResetParticles Whether or not particles are reset on an entity.
+ * @param name				Name of particle effect.
+ * @param vecOrigin			Position of the particle effect.
+ * @param vecStart			Starting position of the particle effect.
+ * @param vecAngles			Angle of particle effect.
+ * @param entity			Entity that the particle effect is applied to.
+ * @param attachType		Attachment type (see ParticleAttachment_t for valid values).
+ * @param attachPoint		Attachment point value.
+ * @param bResetParticles	Whether or not particles are reset on an entity.
  */
 stock void TE_SetupTFParticleEffect(const char[] name, float vecOrigin[3], float vecStart[3],
 		float vecAngles[3], int entity = -1,
