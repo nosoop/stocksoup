@@ -7,7 +7,6 @@
 #define DOWNLOADFILTER_NONE		(0 << 0)				// No downloads allowed.
 #define DOWNLOADFILTER_MAPS		(1 << 0)				// Maps.
 #define DOWNLOADFILTER_SOUNDS	(1 << 1)				// Sounds.
-#define DOWNLOADFILTER_MISC		(1 << 2)				// Other content not defined.
 #define DOWNLOADFILTER_ALL		~DOWNLOADFILTER_NONE	// All downloads allowed.
 
 typedef DownloadFlagsReceived = function void(int client, int downloadflags);
