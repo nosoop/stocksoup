@@ -81,7 +81,7 @@ stock int GetDownloadFilterFlags(const char[] filter) {
 /**
  * Calls the necessary callback.
  */
-stock void CallFiltersReceivedCallback(DownloadFlagsReceived callback, int client,
+static stock void CallFiltersReceivedCallback(DownloadFlagsReceived callback, int client,
 		int downloadflags) {
 	Call_StartFunction(INVALID_HANDLE, callback);
 	Call_PushCell(client);
