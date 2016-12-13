@@ -34,8 +34,8 @@ enum ParticleAttachment_t {
  * @param attachPoint		Attachment point value.
  * @param bResetParticles	Whether or not particles are reset on an entity.
  */
-stock void TE_SetupTFParticleEffect(const char[] name, float vecOrigin[3], float vecStart[3],
-		float vecAngles[3], int entity = -1,
+stock void TE_SetupTFParticleEffect(const char[] name, float vecOrigin[3],
+		float vecStart[3] = NULL_VECTOR, float vecAngles[3] = NULL_VECTOR, int entity = -1,
 		ParticleAttachment_t attachType = PATTACH_ABSORIGIN, int attachPoint = -1,
 		bool bResetParticles = true) {
 	int particleTable, particleIndex;
