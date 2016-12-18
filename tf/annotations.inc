@@ -42,7 +42,7 @@ methodmap TFAnnotationEvent < Event {
 		}
 	}
 	
-	property int Visibility {
+	property int VisibilityBits {
 		public get() {
 			return this.GetInt("visibilityBitfield");
 		}
@@ -74,9 +74,9 @@ methodmap TFAnnotationEvent < Event {
 	
 	public void SetClientVisibility(int client, bool bVisible = true) {
 		if (bVisible) {
-			this.Visibility |= 1 << client;
+			this.VisibilityBits |= 1 << client;
 		} else {
-			this.Visibility &= ~(1 << client);
+			this.VisibilityBits &= ~(1 << client);
 		}
 	}
 	
@@ -140,7 +140,7 @@ static stock TFAnnotationEvent TF2_CreateStockAnnotation(const int[] clients, in
 		for (int i = 0; i <= numClients; i++) {
 			visbits |= 1 << clients[i];
 		}
-		annotation.Visibility = visbits;
+		annotation.VisibilityBits = visbits;
 		
 		annotation.SetText(text);
 		annotation.ID = id;
