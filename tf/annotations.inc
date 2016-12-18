@@ -8,6 +8,11 @@
 
 #define __stocksoup_tf_annotations_included
 
+// Define NULL_SOUND as an empty sound file.
+#if !defined NULL_SOUND
+	#define NULL_SOUND "vo/null.mp3"
+#endif
+
 /**
  * Object-oriented wrapper for TF2's `show_annotation` event.
  */
@@ -111,7 +116,7 @@ methodmap TFAnnotationEvent < Event {
  */
 static stock void __TFAnnotationEvent_InitDefaults(TFAnnotationEvent annotation) {
 	annotation.Lifetime = 5.0;
-	annotation.SetSound("vo/null.mp3");
+	annotation.SetSound(NULL_SOUND);
 }
 
 /**
@@ -131,8 +136,7 @@ stock void TF2_HideAnnotation(int id) {
  * `TF2_ShowFollowerAnnotation`.
  */
 static stock TFAnnotationEvent TF2_CreateStockAnnotation(const int[] clients, int numClients,
-		const char[] text, int id = 0, const char[] sound = "vo/null.mp3",
-		float lifetime = 5.0) {
+		const char[] text, int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0) {
 	TFAnnotationEvent annotation = new TFAnnotationEvent();
 	
 	if (annotation) {
@@ -155,7 +159,7 @@ static stock TFAnnotationEvent TF2_CreateStockAnnotation(const int[] clients, in
  */
 stock void TF2_ShowPositionalAnnotation(const int[] clients, int numClients,
 		const float vecPosition[3], const char[] text, int id = 0,
-		const char[] sound = "vo/null.mp3", float lifetime = 5.0) {
+		const char[] sound = NULL_SOUND, float lifetime = 5.0) {
 	TFAnnotationEvent annotation = TF2_CreateStockAnnotation(clients, numClients, text, id,
 			sound, lifetime);
 	
@@ -169,8 +173,7 @@ stock void TF2_ShowPositionalAnnotation(const int[] clients, int numClients,
  * Wrapper to display a positional annotation to one client.
  */
 stock void TF2_ShowPositionalAnnotationToClient(int client, const float vecPosition[3],
-		const char[] text, int id = 0, const char[] sound = "vo/null.mp3",
-		float lifetime = 5.0) {
+		const char[] text, int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0) {
 	int clients[1];
 	clients[0] = client;
 	
@@ -181,7 +184,7 @@ stock void TF2_ShowPositionalAnnotationToClient(int client, const float vecPosit
  * Wrapper to display a positional annotation to all clients.
  */
 stock void TF2_ShowPositionalAnnotationToAll(const float vecPosition[3], const char[] text,
-		int id = 0, const char[] sound = "vo/null.mp3", float lifetime = 5.0) {
+		int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0) {
 	int[] clients = new int[MaxClients];
 	int total = 0;
 	
@@ -202,8 +205,7 @@ stock void TF2_ShowPositionalAnnotationToAll(const float vecPosition[3], const c
  * Displays an entity-following annotation to a list of clients.
  */
 stock void TF2_ShowFollowingAnnotation(const int[] clients, int numClients, int followEntity,
-		const char[] text, int id = 0, const char[] sound = "vo/null.mp3",
-		float lifetime = 5.0) {
+		const char[] text, int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0) {
 	TFAnnotationEvent annotation = TF2_CreateStockAnnotation(clients, numClients, text, id,
 			sound, lifetime);
 	
@@ -217,8 +219,7 @@ stock void TF2_ShowFollowingAnnotation(const int[] clients, int numClients, int 
  * Wrapper to display an entity-following annotation to one client.
  */
 stock void TF2_ShowFollowingAnnotationToClient(int client, int followEntity,
-		const char[] text, int id = 0, const char[] sound = "vo/null.mp3",
-		float lifetime = 5.0) {
+		const char[] text, int id = 0, const char[] sound = NULL_SOUND, float lifetime = 5.0) {
 	int clients[1];
 	clients[0] = client;
 	
@@ -228,8 +229,8 @@ stock void TF2_ShowFollowingAnnotationToClient(int client, int followEntity,
 /**
  * Wrapper to display an entity-following annotation to all clients.
  */
-stock void TF2_ShowFollowingAnnotationToAll(int followEntity, const char[] text,
-		int id = 0, const char[] sound = "vo/null.mp3", float lifetime = 5.0) {
+stock void TF2_ShowFollowingAnnotationToAll(int followEntity, const char[] text, int id = 0,
+		const char[] sound = NULL_SOUND, float lifetime = 5.0) {
 	int[] clients = new int[MaxClients];
 	int total = 0;
 	
