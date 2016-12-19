@@ -27,3 +27,14 @@ stock void TF2_SetClientUberchargeOverlay(int client) {
 		}
 	}
 }
+
+/**
+ * Displays the class selection screen to a client.
+ * 
+ * @param client		Client to display the class selection panel on.
+ */
+stock void TF2_ShowClassSelectPanel(int client) {
+	TFTeam team = TF2_GetClientTeam(client);
+	
+	ShowVGUIPanel(client, team == TFTeam_Blue ? "class_blue" : "class_red");
+}
