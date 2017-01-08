@@ -42,8 +42,8 @@ methodmap TFAnnotationEvent < Event {
 		public get() {
 			return this.GetBool("show_distance");
 		}
-		public set(bool bShowEffect) {
-			this.SetBool("show_effect", bShowEffect);
+		public set(bool bShowDistance) {
+			this.SetBool("show_distance", bShowDistance);
 		}
 	}
 	
