@@ -52,14 +52,15 @@ stock ArrayList ExplodeStringToList(const char[] text, const char[] split, int m
  * substring matches and replaced with their values.
  * 
  * Replacements are performed in string order (e.g., if "ace" and "eba" are substrings and the
- * string to be processed is "aceba ebace", it will end up processing "{ace}ba {eba}bc").
+ * string to be processed is "aceba ebace", it will end up processing "{ace}ba {eba}ce").
  * 
- * Behavior of prefix-overlapping substrings is not defined (e.g., if "arse" and "arsenic" are
- * substrings, there is no rule to determine which one is applied).
+ * If multiple matches are found at a specific index, the longest substring has priority (e.g.,
+ * if "arse" and "arsenic" are possible matches for string "arsenic arse", "{arsenic} {arse}"
+ * are matched).
  * 
  * Performance is probably abysmal.
  */
-stock void MappedReplace(char[] buffer, int maxlen, StringMap replacements) {
+stock void ReplaceMultiple(char[] buffer, int maxlen, StringMap replacements) {
 	int nMaxReplacements = strlen(buffer);
 	int[] replacementIndex = new int[nMaxReplacements];
 	
@@ -81,8 +82,11 @@ stock void MappedReplace(char[] buffer, int maxlen, StringMap replacements) {
 			next = StrContains(buffer[last], substring);
 			
 			if (next >= 0) {
-				// TODO conflict resolution for matches, check if index is allocated
-				replacementIndex[last + next] = i;
+				int existingMatch = replacementIndex[last + next];
+				if (existingMatch == -1
+						|| substrings.KeyBufferSize(existingMatch) < substringLength) {
+					replacementIndex[last + next] = i;
+				}
 				last += next + substringLength;
 			}
 		} while (next != -1);
