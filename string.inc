@@ -77,19 +77,16 @@ stock void ReplaceMultiple(char[] buffer, int maxlen, StringMap replacements) {
 		char[] substring = new char[substringLength];
 		substrings.GetKey(i, substring, substringLength);
 		
-		int last, next;
-		do {
-			next = StrContains(buffer[last], substring);
-			
-			if (next >= 0) {
-				int existingMatch = replacementIndex[last + next];
-				if (existingMatch == -1
-						|| substrings.KeyBufferSize(existingMatch) < substringLength) {
-					replacementIndex[last + next] = i;
-				}
-				last += next + substringLength;
+		int current, next;
+		while ((next = StrContains(buffer[current], substring)) != -1) {
+			current += next;
+			int existingMatch = replacementIndex[current];
+			if (existingMatch == -1
+					|| substrings.KeyBufferSize(existingMatch) < substringLength) {
+				replacementIndex[current] = i;
 			}
-		} while (next != -1);
+			current += substringLength;
+		}
 	}
 	
 	char[] source = new char[maxlen];
@@ -99,11 +96,18 @@ stock void ReplaceMultiple(char[] buffer, int maxlen, StringMap replacements) {
 	// if replacementIndex is -1, copy corresponding character from source
 	// else copy value from stringmap
 	strcopy(buffer, maxlen, "");
-	for (int i = 0; i < strlen(source); i++) {
+	for (int i = 0, s = strlen(source); i < s; i++) {
 		// if you want to do any sort of conflict resolution, you could do it here, somewhere.
 		// some sort of lookahead would probably work well
 		int index = replacementIndex[i];
 		if (index == -1) {
+			/*int skips;
+			while (replacementIndex[++skips] == -1) {}
+			
+			char[] next = new char[skips];
+			strcopy(next, skips, source[i]);
+			i += skips - 2;*/
+			
 			char next[1];
 			next[0] = source[i];
 			StrCat(buffer, maxlen, next);
@@ -119,7 +123,7 @@ stock void ReplaceMultiple(char[] buffer, int maxlen, StringMap replacements) {
 			StrCat(buffer, maxlen, replacement);
 			
 			// skip matched substring, off-by-one since for loop will increment
-			i += strlen(substring) - 1;
+			i += substringLength - 2;
 		}
 	}
 	delete substrings;
