@@ -51,7 +51,11 @@ stock ArrayList ExplodeStringToList(const char[] text, const char[] split, int m
  * A naive implementation where, in a buffer, replacements are performed using StringMap keys as
  * substring matches and replaced with their values.
  * 
- * Behavior of overlapping substrings is not defined.
+ * Replacements are performed in string order (e.g., if "ace" and "eba" are substrings and the
+ * string to be processed is "aceba ebace", it will end up processing "{ace}ba {eba}bc").
+ * 
+ * Behavior of prefix-overlapping substrings is not defined (e.g., if "arse" and "arsenic" are
+ * substrings, there is no rule to determine which one is applied).
  * 
  * Performance is probably abysmal.
  */
