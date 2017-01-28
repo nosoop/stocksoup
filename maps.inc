@@ -27,9 +27,10 @@ int GetMapWorkshopID(const char[] fullMapName) {
 		// TODO other formats for workshop map names
 		if (currentGame == Engine_CSGO) {
 			// workshop/123456789/some_map_name ?
-			char mapParts[3][32];
-			ExplodeString(fullMapName, "/", mapParts, sizeof(mapParts), sizeof(mapParts[]));
-			return StringToInt(mapParts[1]);
+			int id;
+			
+			StringToIntEx(fullMapName[FindCharInString(fullMapName, '/') + 1], id);
+			return id;
 		}
 	}
 	return 0;
