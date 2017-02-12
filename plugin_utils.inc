@@ -20,7 +20,7 @@
 
 #define __stocksoup_plugin_utils_included
 
-#include <stocksoup/file>
+#include <stocksoup/files>
 
 /**
  * Unloads a plugin by file name.
