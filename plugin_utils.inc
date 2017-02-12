@@ -20,6 +20,8 @@
 
 #define __stocksoup_plugin_utils_included
 
+#include <stocksoup/file>
+
 /**
  * Unloads a plugin by file name.
  */
@@ -79,8 +81,11 @@ stock bool DisablePluginFile(const char[] fileName, bool unload = true) {
 		BuildPluginFilePath(fileName, currentPath, sizeof(currentPath));
 		BuildPluginFilePath(fileName, disabledPath, sizeof(disabledPath), true);
 		
-		// TODO create parent directories as necessary
-		return RenameFile(disabledPath, currentPath);
+		char directories[PLATFORM_MAX_PATH];
+		strcopy(directories, FindCharInString(disabledPath, '/', true) + 1, disabledPath);
+		
+		return CreateDirectories(directories, 0b111101101)
+				&& RenameFile(disabledPath, currentPath);
 	}
 	return false;
 }
