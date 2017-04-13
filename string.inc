@@ -18,6 +18,45 @@ stock bool StrEmpty(const char[] str) {
 }
 
 /**
+ * Truncates a longer string so it fits into the buffer, adding an indicator of clipped text.
+ * 
+ * @param text		The text to clip.
+ * @param buffer	The buffer that will store the clipped text.
+ * @param maxlen	The maximum length of the buffer.
+ * @param clip		The string that will be used to indicate clipped text.
+ * @param wordBreak	If true, will attempt to clip along word boundaries.  False will clip within
+ * words.
+ */
+stock void TruncateString(const char[] text, char[] buffer, int maxlen,
+		const char[] clip = "...", bool wordBreak = false) {
+	strcopy(buffer, maxlen, text);
+	
+	if (strlen(text) > maxlen - 1) {
+		int clipStart = maxlen - strlen(clip) - 1;
+		
+		if (wordBreak) {
+			int nextBreak, partBreak;
+			while ((partBreak = FindCharInString(text[nextBreak + 1], ' ', false)) != -1
+					&& nextBreak + partBreak < clipStart) {
+				nextBreak += partBreak + 1;
+			}
+			
+			if (nextBreak && nextBreak <= clipStart) {
+				clipStart = nextBreak;
+			}
+		}
+		
+		for (int i = 0; i < strlen(clip); i++) {
+			buffer[clipStart + i] = clip[i];
+		}
+		
+		if (strlen(text) > clipStart + strlen(clip) + 1) {
+			buffer[clipStart + strlen(clip)] = '\0';
+		}
+	}
+}
+
+/**
  * Breaks a string into pieces and pushes each piece into an ArrayList.
  * 
  * @param text				The string to split.
@@ -31,7 +70,7 @@ stock ArrayList ExplodeStringToList(const char[] text, const char[] split, int m
 		bool copyRemainder = false) {
 	int reloc_idx, idx;
 	
-	ArrayList list = new ArrayList(maxlen);
+	ArrayList list = new ArrayList(ByteCountToCells(maxlen));
 	
 	if (split[0]) {
 		char buffer[64];
