@@ -18,6 +18,13 @@ stock bool ParentEntity(int parent, int attachment, const char[] attachPoint = "
 }
 
 /**
+ * Copies the entity's model into the specified buffer.
+ */
+stock void GetEntityModelPath(int entity, char[] buffer, int maxlen) {
+	GetEntPropString(entity, Prop_Data, "m_ModelName", buffer, maxlen);
+}
+
+/**
  * Attempts to retrieve a target name for an entity.
  * Returns false if a name isn't set, error implied if `m_iName` isn't available via datamaps
  * (why would you even try to get the target name of an entity that doesn't have one?).
@@ -63,4 +70,21 @@ stock void GeneratePluginTargetName(char[] target, int maxlen) {
 			m_nEmptyTargets++);
 	
 	m_nEmptyTargets %= 4096;
+}
+
+/**
+ * Searches for an entity by target name. 
+ */
+stock int FindEntityByTargetName(int startEnt = -1, const char[] target,
+		const char[] className = "*") {
+	int targetmaxlen = strlen(target) + 1;
+	char[] targetbuf = new char[targetmaxlen];
+	while ((startEnt = FindEntityByClassname(startEnt, className)) != -1) {
+		GetEntityTargetName(startEnt, targetbuf, targetmaxlen);
+		
+		if (StrEqual(target, targetbuf)) {
+			return startEnt;
+		}
+	}
+	return startEnt;
 }
