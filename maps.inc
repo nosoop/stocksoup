@@ -12,7 +12,7 @@
  * Returns the workshop ID for the specified full map path, or 0 if the map does not have a
  * workshop ID.
  */
-int GetMapWorkshopID(const char[] fullMapName) {
+stock int GetMapWorkshopID(const char[] fullMapName) {
 	EngineVersion currentGame = GetEngineVersion();
 	if (StrContains(fullMapName, "workshop/") == 0) {
 		if (currentGame == Engine_TF2) {
