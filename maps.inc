@@ -35,3 +35,11 @@ stock int GetMapWorkshopID(const char[] fullMapName) {
 	}
 	return 0;
 }
+
+/** 
+ * Returns the current map's display name.
+ */
+stock bool GetCurrentMapDisplayName(char[] buffer, int maxlen) {
+	GetCurrentMap(buffer, maxlen);
+	return GetMapDisplayName(buffer, buffer, maxlen);
+}
