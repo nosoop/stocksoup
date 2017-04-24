@@ -7,6 +7,8 @@
 
 #define __stocksoup_file_included
 
+#include <stocksoup/string>
+
 /**
  * Creates a directory, creating parent directories if they don't exist.
  * 
@@ -25,23 +27,18 @@ stock bool CreateDirectories(const char[] path, int mode, bool use_valve_fs = fa
 		const char[] valve_path_id = "DEFAULT_WRITE_PATH") {
 	char partialPathBuffer[PLATFORM_MAX_PATH];
 	
-	int currentSplit = 0;
-	while (currentSplit < strlen(path)) {
-		int subSplit = FindCharInString(path[currentSplit], '/', false);
-		
-		if (subSplit == -1) {
-			// subsplit the remaining portion of the string
-			subSplit = strlen(path[currentSplit]);
-		}
-		
-		currentSplit += subSplit + 1; // subsplit + forward slash
-		strcopy(partialPathBuffer, currentSplit + 1, path); // currentsplit + null
+	int p = -1;
+	while ( (p = FindNextCharInString(p, path, '/')) != -1 ) {
+		// exclude trailing forward slash
+		strcopy(partialPathBuffer, p, path);
 		
 		if (!DirExists(partialPathBuffer, use_valve_fs, valve_path_id)
 				&& !CreateDirectory(partialPathBuffer, mode, use_valve_fs, valve_path_id)) {
 			return false;
 		}
 	}
-	return true;
+	
+	// try to create the last directory in the path
+	return DirExists(path, use_valve_fs, valve_path_id) ||
+			CreateDirectory(path, mode, use_valve_fs, valve_path_id);
 }
-
