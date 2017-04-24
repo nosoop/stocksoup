@@ -167,3 +167,34 @@ stock void ReplaceMultiple(char[] buffer, int maxlen, StringMap replacements) {
 	}
 	delete substrings;
 }
+
+/**
+ * Returns the index after the next matching character in the string, or -1 if not found.
+ */
+stock int FindNextCharInString(int currentSplit, const char[] str, char c) {
+	currentSplit = currentSplit == -1? 0 : currentSplit;
+	int subSplit = FindCharInString(str[currentSplit], c, false);
+	
+	if (subSplit == -1) {
+		// no next split
+		return -1;
+	}
+	return currentSplit + subSplit + 1;
+}
+
+/**
+ * Returns the index of the first character after a certain character sequence is reached, or -1
+ * if not found.
+ */
+stock int FindNextSplitInString(int currentSplit, const char[] str, const char[] split) {
+	// iterate where first char matches
+	while ( (currentSplit = FindNextCharInString(currentSplit, str, split[0])) != -1 ) {
+		int c0 = currentSplit - 1;
+		
+		// return if split matches
+		if (!strncmp(str[c0], split, strlen(split))) {
+			return c0 + strlen(split);
+		}
+	}
+	return -1;
+}
