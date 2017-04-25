@@ -188,13 +188,11 @@ stock int FindNextCharInString(int currentSplit, const char[] str, char c) {
  */
 stock int FindNextSplitInString(int currentSplit, const char[] str, const char[] split) {
 	// iterate where first char matches
-	while ( (currentSplit = FindNextCharInString(currentSplit, str, split[0])) != -1 ) {
-		int c0 = currentSplit - 1;
-		
-		// return if split matches
-		if (!strncmp(str[c0], split, strlen(split))) {
-			return c0 + strlen(split);
-		}
+	currentSplit = currentSplit == -1? 0 : currentSplit;
+	int subSplit = StrContains(str[currentSplit], split);
+	
+	if (subSplit == -1) {
+		return -1;
 	}
-	return -1;
+	return currentSplit + subSplit + strlen(split);
 }
