@@ -6,6 +6,10 @@
  * `TrackLibraryRemove` yourself.
  * 
  * The compiler will warn you that the symbols are never used, if you happen to forget.
+ * 
+ * If TRACK_LIBRARY_STATES is defined, the `GetLibraryState` function and associated storage
+ * will be provided for library state retrieval.  Otherwise, this include file only helps manage
+ * forwards for library availability.
  */
 
 #if defined __stocksoup_library_watcher_included
@@ -49,22 +53,20 @@ stock void UnhookLibraryUpdate(const char[] name, LibraryStateCallback callback)
 			GetLibraryWatchList().Remove(name);
 		}
 	}
+#if defined TRACK_LIBRARY_STATES
 	GetLibraryStates().DeleteKey(name);
-}
-
-/**
- * Returns the current library availability.
- */
-stock LibraryState GetLibraryState(const char[] name) {
-	return view_as<LibraryState>(GetLibraryStates().GetNum(name));
+#endif
 }
 
 static void UpdateLibraryState(const char[] name, LibraryState state) {
 	Handle localForward;
 	if (GetLibraryWatchList().GetValue(name, localForward)) {
+#if defined TRACK_LIBRARY_STATES
 		LibraryState previousState = GetLibraryState(name);
-		
 		GetLibraryStates().SetNum(name, view_as<int>(state));
+#else
+		LibraryState previousState = Library_Untracked;
+#endif
 		if (previousState == Library_Untracked || previousState != state) {
 			Call_StartForward(localForward);
 			Call_PushString(name);
@@ -83,6 +85,14 @@ static stock StringMap GetLibraryWatchList() {
 	return s_LibraryInfo;
 }
 
+#if defined TRACK_LIBRARY_STATES
+/**
+ * Returns the current library availability.
+ */
+stock LibraryState GetLibraryState(const char[] name) {
+	return view_as<LibraryState>(GetLibraryStates().GetNum(name));
+}
+
 static stock KeyValues GetLibraryStates() {
 	static KeyValues s_LibraryState;
 	
@@ -91,6 +101,7 @@ static stock KeyValues GetLibraryStates() {
 	}
 	return s_LibraryState;
 }
+#endif
 
 /**
  * Functions that must be called when a library is added.
