@@ -16,7 +16,7 @@
  * 
  * @return Amount of ammo actually given.
  */
-stock void TF2_GiveWeaponAmmo(int weapon, int amount, bool supressSound = true) {
+stock int TF2_GiveWeaponAmmo(int weapon, int amount, bool supressSound = true) {
 	int ammoType = GetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoType");
 	int client = GetEntPropEnt(weapon, Prop_Send, "m_hOwner");
 	
