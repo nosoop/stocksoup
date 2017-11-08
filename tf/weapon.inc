@@ -25,3 +25,23 @@ stock void TF2_GiveWeaponAmmo(int weapon, int amount, bool supressSound = true) 
 	}
 	return 0;
 }
+
+/**
+ * Directly sets the amount of ammo a client can carry for a specific weapon.
+ */
+stock void TF2_SetWeaponAmmo(int weapon, int amount) {
+	int ammoType = GetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoType");
+	int client = GetEntPropEnt(weapon, Prop_Send, "m_hOwner");
+	
+	if (client > 0 && client <= MaxClients && ammoType != -1) {
+		SetEntProp(client, Prop_Send, "m_iAmmo", amount, 4, ammoType);
+	}
+}
+
+/**
+ * Empties and refills the amount of ammo a client can carry for a specific weapon.
+ */
+stock void TF2_ResetWeaponAmmo(int weapon) {
+	TF2_SetWeaponAmmo(weapon, 0);
+	TF2_GiveWeaponAmmo(weapon, 1000);
+}
