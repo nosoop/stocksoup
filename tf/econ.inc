@@ -1,8 +1,8 @@
-#if defined __stocksoup_tf_wearable
+#if defined __stocksoup_tf_econ_included
 	#endinput
 #endif
 
-#define __stocksoup_tf_wearable
+#define __stocksoup_tf_econ_included
 
 // defindex used for wearables not in the schema (medic's backpack, etc.)
 #define DEFINDEX_UNDEFINED 65535
