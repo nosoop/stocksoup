@@ -7,6 +7,13 @@
 // defindex used for wearables not in the schema (medic's backpack, etc.)
 #define DEFINDEX_UNDEFINED 65535
 
+/**
+ * Returns an item's definition index.
+ */
+stock int TF2_GetItemDefinitionIndex(int entity) {
+	return GetEntProp(entity, Prop_Send, "m_iItemDefinitionIndex");
+}
+
 /** 
  * Creates a wearable entity.
  * 
