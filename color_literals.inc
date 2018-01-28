@@ -197,6 +197,29 @@
 #define COLOR_VINTAGE              "\x07476291" // same as Vintage item quality in TF2
 
 /**
+ * CS:GO's limited color palette.
+ * 
+ * https://forums.alliedmods.net/showpost.php?p=2271350&postcount=1047
+ * https://i.imgur.com/E3PgWVI.png
+ */
+#define CSGO_COLOR_GREEN           "\x04"
+#define CSGO_COLOR_OLIVE           "\x05"
+#define CSGO_COLOR_LIME            "\x06"
+#define CSGO_COLOR_LIGHTRED        "\x07"
+#define CSGO_COLOR_GRAY            "\x08"
+#define CSGO_COLOR_GREY            "\x08"
+#define CSGO_COLOR_YELLOW          "\x09"
+#define CSGO_COLOR_BLUEGRAY        "\x0A"
+#define CSGO_COLOR_BLUEGREY        "\x0A"
+#define CSGO_COLOR_LIGHTBLUE       "\x0B"
+#define CSGO_COLOR_DARKBLUE        "\x0C"
+#define CSGO_COLOR_BLUEGRAY2       "\x0D"
+#define CSGO_COLOR_BLUEGREY2       "\x0D"
+#define CSGO_COLOR_ORCHID          "\x0E"
+#define CSGO_COLOR_SALMON          "\x0F"
+#define CSGO_COLOR_ORANGE          "\x10"
+
+/**
  * Prints a colored message.
  * 
  * See: http://www.teamfortress.com/post.php?id=7946
@@ -211,18 +234,67 @@
  * outputs the hex values to the client's developer console.
  */
 stock void PrintColoredChat(int client, const char[] format, any ...) {
-	BfWrite buffer = view_as<BfWrite>(StartMessageOne("SayText2", client,
-			USERMSG_RELIABLE | USERMSG_BLOCKHOOKS));
-	
 	// https://forums.alliedmods.net/showpost.php?p=1909951&postcount=4
 	char modifiedFormat[192] = COLOR_DEFAULT, messageBuffer[192];
 	StrCat(modifiedFormat, sizeof(modifiedFormat), format);
 	
 	VFormat(messageBuffer, sizeof(messageBuffer), modifiedFormat, 3);
 	
-	buffer.WriteByte(client);
-	buffer.WriteByte(true);
-	buffer.WriteString(messageBuffer);
+	Handle buffer = StartMessageOne("SayText2", client, USERMSG_RELIABLE | USERMSG_BLOCKHOOKS);
+	switch (GetUserMessageType()) {
+		case UM_BitBuf: {
+			BfWrite bitbuf = UserMessageToBfWrite(buffer);
+			
+			bitbuf.WriteByte(client);
+			bitbuf.WriteByte(true);
+			bitbuf.WriteString(messageBuffer);
+		}
+		case UM_Protobuf: {
+			Protobuf protobuf = UserMessageToProtobuf(buffer);
+			
+			protobuf.SetBool("chat", true);
+			protobuf.SetInt("ent_idx", 0); // world instead of target client for proper coloring
+			
+			protobuf.SetString("msg_name", messageBuffer);
+			protobuf.AddString("params", "");
+			protobuf.AddString("params", "");
+			protobuf.AddString("params", "");
+			protobuf.AddString("params", "");
+		}
+	}
 	
 	EndMessage();
 }
+
+/**
+ * Strips color characters from a message.
+ * 
+ * If bStripHexCodes is true, \x07 and \x08 will also remove the RGB(A) characters that follow,
+ * and \n is treated as a newline (if not stripping hex codes, newline is assumed to be a
+ * color as is the case in CS:GO).
+ */
+stock int StripColorChars(const char[] input, char[] output, int maxlen,
+		bool bStripHexCodes = true) {
+	int i, o, l = strlen(input);
+	while (i < l && o < maxlen) {
+		bool bIsColorChar = input[i] < 32 && (input[i] != '\n' || !bStripHexCodes);
+		
+		if (bIsColorChar) {
+			if (bStripHexCodes) {
+				switch (input[i]) {
+					case '\x07': {
+						i += 6; // RRGGBB
+					}
+					case '\x08': {
+						i += 8; // RRGGBBAA
+					}
+				}
+			}
+			i++;
+		}
+		output[o++] = input[i++];
+	}
+	return o;
+}
+
+// TODO add support for one-way CS:GO to RGB conversions
