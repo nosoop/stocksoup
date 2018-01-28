@@ -13,6 +13,12 @@
  * https://forums.alliedmods.net/showthread.php?t=185016
  */
 
+#if defined __stocksoup_color_literals_included
+	#endinput
+#endif
+
+#define __stocksoup_color_literals_included
+
 #define COLOR_DEFAULT              "\x01"
 #define COLOR_PLAYER               "\x02"
 #define COLOR_TEAM                 "\x03"
