@@ -309,6 +309,7 @@ stock void PrintColoredChatAll(const char[] format, any ...) {
  */
 stock int StripColorChars(const char[] input, char[] output, int maxlen,
 		bool bStripHexCodes = true) {
+	char[] outputBuffer = new char[maxlen];
 	int i, o, l = strlen(input);
 	while (i < l && o < maxlen) {
 		bool bIsColorChar = input[i] < 32 && (input[i] != '\n' || !bStripHexCodes);
@@ -326,9 +327,9 @@ stock int StripColorChars(const char[] input, char[] output, int maxlen,
 			}
 			i++;
 		}
-		output[o++] = input[i++];
+		outputBuffer[o++] = input[i++];
 	}
-	return o;
+	return strcopy(output, maxlen, outputBuffer);
 }
 
 /**

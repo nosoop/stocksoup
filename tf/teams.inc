@@ -5,6 +5,7 @@
 #define __stocksoup_tf_teams_included
 
 #include <tf2>
+#include <sdktools>
 
 enum TFTeamRoles {
 	TFTeamRole_Undefined = 0,
