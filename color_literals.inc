@@ -6,8 +6,8 @@
  * mapping at runtime.
  * 
  * To use these colors, use the string literal concatenation operator (...) to insert them in
- * your chat messages.  No additional processing is performed, so make sure your target game(s)
- * are compatible with these constants.
+ * your chat messages.  No additional process or checks are performed at run-time, so make sure
+ * your target game(s) are compatible with these constants.
  * 
  * Should support the same games that More Colors supports:
  * https://forums.alliedmods.net/showthread.php?t=185016
@@ -230,11 +230,15 @@
  * 
  * See: http://www.teamfortress.com/post.php?id=7946
  * 
- * Messages can be colorized by using \x07 followed by a hex code in RRGGBB format, or \x08
- * followed by a hex code in RRGGBBAA format.
+ * In games that support the full color range, messages can be colorized by using \x07 followed
+ * by a hex code in RRGGBB format, or \x08 followed by a hex code in RRGGBBAA format.  You can
+ * also use the COLOR_* constants from this include file.
  * 
- * A few other colors include \x01-\x04, representing normal, player name color, team color, and
+ * Default colors include \x01-\x04, representing normal, player name color, team color, and
  * location color.
+ * 
+ * CS:GO supports other single-byte colors from \x05 to \x10.  You can also use the CSGO_COLOR_*
+ * constants from this include file.
  * 
  * This is intended as an replacement to `PrintToChat`, as using that function with color codes
  * outputs the hex values to the client's developer console.
@@ -303,4 +307,65 @@ stock int StripColorChars(const char[] input, char[] output, int maxlen,
 	return o;
 }
 
-// TODO add support for one-way CS:GO to RGB conversions
+/**
+ * Map CS:GO-compatible colors to RGB colors that are supported in the other games.
+ * 
+ * CS:GO-compatible colors are defined as a subset of single, non-printable characters
+ * (see CSGO_COLOR_*).
+ * 
+ * An ArrayList handle can be passed in with manually-defined replacement strings.  \x01 maps
+ * to the first index in the array (0), \x02 to the second, etc.
+ */
+stock int MapCSGOColorTextToRGB(const char[] input, char[] output, int maxlen,
+		ArrayList colorMap = null) {
+	if (!colorMap) {
+		colorMap = GetDefaultColorMap();
+	}
+	
+	int i, o, l = strlen(input);
+	while (i < l && o < maxlen) {
+		int mappedColor = input[i] - 1;
+		if (mappedColor < colorMap.Length) {
+			i++;
+			
+			char color[12];
+			colorMap.GetString(mappedColor, color, sizeof(color));
+			
+			StrCat(output, maxlen, color);
+			o = strlen(output);
+		} else {
+			output[o++] = input[i++];
+		}
+	}
+	return o;
+}
+
+/** 
+ * Returns a singleton ArrayList containing a default color mapping for CS:GO colors, allocating
+ * a new handle if it currently does not exist.
+ */
+static stock ArrayList GetDefaultColorMap() {
+	static ArrayList s_ColorMap;
+	
+	if (!s_ColorMap) {
+		s_ColorMap = new ArrayList(ByteCountToCells(12));
+		
+		s_ColorMap.PushString(COLOR_DEFAULT);
+		s_ColorMap.PushString(COLOR_PLAYER);
+		s_ColorMap.PushString(COLOR_TEAM);
+		s_ColorMap.PushString(COLOR_LOCATION);
+		s_ColorMap.PushString(COLOR_OLIVE);
+		s_ColorMap.PushString(COLOR_GREENYELLOW);
+		s_ColorMap.PushString(COLOR_CRIMSON);
+		s_ColorMap.PushString(COLOR_LIGHTGRAY);
+		s_ColorMap.PushString(COLOR_YELLOW);
+		s_ColorMap.PushString(COLOR_LIGHTSTEELBLUE);
+		s_ColorMap.PushString(COLOR_LIGHTBLUE);
+		s_ColorMap.PushString(COLOR_DODGERBLUE);
+		s_ColorMap.PushString(COLOR_SLATEGRAY);
+		s_ColorMap.PushString(COLOR_ORCHID);
+		s_ColorMap.PushString(COLOR_SALMON);
+		s_ColorMap.PushString(COLOR_ORANGE);
+	}
+	return s_ColorMap;
+}
