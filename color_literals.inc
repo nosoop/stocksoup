@@ -322,6 +322,7 @@ stock int MapCSGOColorTextToRGB(const char[] input, char[] output, int maxlen,
 		colorMap = GetDefaultColorMap();
 	}
 	
+	char[] outputBuffer = new char[maxlen];
 	int i, o, l = strlen(input);
 	while (i < l && o < maxlen) {
 		int mappedColor = input[i] - 1;
@@ -331,13 +332,13 @@ stock int MapCSGOColorTextToRGB(const char[] input, char[] output, int maxlen,
 			char color[12];
 			colorMap.GetString(mappedColor, color, sizeof(color));
 			
-			StrCat(output, maxlen, color);
-			o = strlen(output);
+			StrCat(outputBuffer, maxlen, color);
+			o = strlen(outputBuffer);
 		} else {
-			output[o++] = input[i++];
+			outputBuffer[o++] = input[i++];
 		}
 	}
-	return o;
+	return strcopy(output, maxlen, outputBuffer);
 }
 
 /** 
