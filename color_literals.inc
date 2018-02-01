@@ -225,6 +225,9 @@
 #define CSGO_COLOR_SALMON          "\x0F"
 #define CSGO_COLOR_ORANGE          "\x10"
 
+#define CHAT_SOURCE_SERVER 0
+#define CHAT_SOURCE_SELF -1
+
 /**
  * Prints a colored message.
  * 
@@ -237,13 +240,52 @@
  * Default colors include \x01-\x04, representing normal, player name color, team color, and
  * location color.
  * 
+ * The team color (\x03) is based on a source player's current team.  This function treats the
+ * server as the source; use the `PrintColoredChat*Ex` stock functions to have better control
+ * over the source.
+ * 
  * CS:GO supports other single-byte colors from \x05 to \x10.  You can also use the CSGO_COLOR_*
  * constants from this include file.
  * 
- * This is intended as an replacement to `PrintToChat`, as using that function with color codes
+ * This is intended as a replacement to `PrintToChat`, as using that function with color codes
  * outputs the hex values to the client's developer console.
  */
 stock void PrintColoredChat(int client, const char[] format, any ...) {
+	char messageBuffer[192];
+	SetGlobalTransTarget(client);
+	VFormat(messageBuffer, sizeof(messageBuffer), format, 3);
+	SetGlobalTransTarget(LANG_SERVER);
+	
+	PrintColoredChatEx(client, CHAT_SOURCE_SERVER, "%s", messageBuffer);
+}
+
+/**
+ * Prints a colored message to all players.
+ */
+stock void PrintColoredChatAll(const char[] format, any ...) {
+	char messageBuffer[192];
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsClientInGame(i)) {
+			continue;
+		}
+		
+		SetGlobalTransTarget(i);
+		VFormat(messageBuffer, sizeof(messageBuffer), format, 2);
+		
+		PrintColoredChatEx(i, CHAT_SOURCE_SERVER, "%s", messageBuffer);
+	}
+	SetGlobalTransTarget(LANG_SERVER);
+}
+
+/**
+ * Prints a colored message to all players, with the option of setting a source player.
+ * CHAT_SOURCE_SELF treats the client as the source, meaning the team color is that of the
+ * source player's.
+ */
+stock void PrintColoredChatEx(int client, int source = CHAT_SOURCE_SELF, const char[] format,
+		any ...) {
+	source = source == CHAT_SOURCE_SELF? client : source;
+	
 	// https://forums.alliedmods.net/showpost.php?p=1909951&postcount=4
 	char modifiedFormat[192] = COLOR_DEFAULT, messageBuffer[192];
 	
@@ -254,14 +296,16 @@ stock void PrintColoredChat(int client, const char[] format, any ...) {
 		strcopy(modifiedFormat, sizeof(modifiedFormat), format);
 	}
 	
-	VFormat(messageBuffer, sizeof(messageBuffer), modifiedFormat, 3);
+	SetGlobalTransTarget(client);
+	VFormat(messageBuffer, sizeof(messageBuffer), modifiedFormat, 4);
+	SetGlobalTransTarget(LANG_SERVER);
 	
 	Handle buffer = StartMessageOne("SayText2", client, USERMSG_RELIABLE | USERMSG_BLOCKHOOKS);
 	switch (GetUserMessageType()) {
 		case UM_BitBuf: {
 			BfWrite bitbuf = UserMessageToBfWrite(buffer);
 			
-			bitbuf.WriteByte(client);
+			bitbuf.WriteByte(source);
 			bitbuf.WriteByte(true);
 			bitbuf.WriteString(messageBuffer);
 		}
@@ -269,7 +313,7 @@ stock void PrintColoredChat(int client, const char[] format, any ...) {
 			Protobuf protobuf = UserMessageToProtobuf(buffer);
 			
 			protobuf.SetBool("chat", true);
-			protobuf.SetInt("ent_idx", 0); // world instead of target client for proper coloring
+			protobuf.SetInt("ent_idx", source);
 			
 			protobuf.SetString("msg_name", messageBuffer);
 			protobuf.AddString("params", "");
@@ -283,9 +327,10 @@ stock void PrintColoredChat(int client, const char[] format, any ...) {
 }
 
 /**
- * Prints colored chat to all players.
+ * Prints colored chat to all players, using a specific client as the source.
+ * CHAT_SOURCE_SELF treats each client as the message's source.
  */
-stock void PrintColoredChatAll(const char[] format, any ...) {
+stock void PrintColoredChatAllEx(int source = CHAT_SOURCE_SELF, const char[] format, any ...) {
 	char messageBuffer[192];
 	for (int i = 1; i <= MaxClients; i++) {
 		if (!IsClientInGame(i)) {
@@ -293,9 +338,9 @@ stock void PrintColoredChatAll(const char[] format, any ...) {
 		}
 		
 		SetGlobalTransTarget(i);
-		VFormat(messageBuffer, sizeof(messageBuffer), format, 2);
+		VFormat(messageBuffer, sizeof(messageBuffer), format, 3);
 		
-		PrintColoredChat(i, "%s", messageBuffer);
+		PrintColoredChatEx(i, source, "%s", messageBuffer);
 	}
 	SetGlobalTransTarget(LANG_SERVER);
 }
