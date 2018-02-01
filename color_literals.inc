@@ -246,7 +246,13 @@
 stock void PrintColoredChat(int client, const char[] format, any ...) {
 	// https://forums.alliedmods.net/showpost.php?p=1909951&postcount=4
 	char modifiedFormat[192] = COLOR_DEFAULT, messageBuffer[192];
-	StrCat(modifiedFormat, sizeof(modifiedFormat), format);
+	
+	if (strncmp(format, modifiedFormat, 1) != 0) {
+		// prefix doesn't match, prepend with default color
+		StrCat(modifiedFormat, sizeof(modifiedFormat), format);
+	} else {
+		strcopy(modifiedFormat, sizeof(modifiedFormat), format);
+	}
 	
 	VFormat(messageBuffer, sizeof(messageBuffer), modifiedFormat, 3);
 	
@@ -274,6 +280,24 @@ stock void PrintColoredChat(int client, const char[] format, any ...) {
 	}
 	
 	EndMessage();
+}
+
+/**
+ * Prints colored chat to all players.
+ */
+stock void PrintColoredChatAll(const char[] format, any ...) {
+	char messageBuffer[192];
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsClientInGame(i)) {
+			continue;
+		}
+		
+		SetGlobalTransTarget(i);
+		VFormat(messageBuffer, sizeof(messageBuffer), format, 2);
+		
+		PrintColoredChat(i, "%s", messageBuffer);
+	}
+	SetGlobalTransTarget(LANG_SERVER);
 }
 
 /**
