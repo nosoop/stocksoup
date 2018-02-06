@@ -52,7 +52,7 @@ methodmap TFAnnotationEvent < Event {
 			return this.GetInt("visibilityBitfield");
 		}
 		public set(int visibilityBitfield) {
-			return this.SetInt("visibilityBitfield", visibilityBitfield);
+			this.SetInt("visibilityBitfield", visibilityBitfield);
 		}
 	}
 	
@@ -61,7 +61,7 @@ methodmap TFAnnotationEvent < Event {
 			return this.GetInt("follow_entindex");
 		}
 		public set(int visibilityBitfield) {
-			return this.SetInt("follow_entindex", visibilityBitfield);
+			this.SetInt("follow_entindex", visibilityBitfield);
 		}
 	}
 	
