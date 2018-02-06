@@ -23,15 +23,16 @@ methodmap TFMonsterResource {
 	public static TFMonsterResource GetEntity(bool create = false) {
 		int hMonsterResource = FindEntityByClassname(-1, "monster_resource");
 		
-		if (hMonsterResource == -1) {
+		if (hMonsterResource == -1 && create) {
 			hMonsterResource = CreateEntityByName("monster_resource");
 			
-			if (hMonsterResource == -1) {
+			if (IsValidEntity(hMonsterResource)) {
 				DispatchSpawn(hMonsterResource);
 			}
 		}
 		
-		return view_as<TFMonsterResource>(EntIndexToEntRef(hMonsterResource));
+		return view_as<TFMonsterResource>(IsValidEntity(hMonsterResource)?
+				EntIndexToEntRef(hMonsterResource) : INVALID_ENT_REFERENCE);
 	}
 	
 	/**
