@@ -61,10 +61,10 @@ stock void ReadPackVector(DataPack pack, float vec[3]) {
 /**
  * Packs a variable-length list of clients into a data pack.  Clients are added by their serial.
  */
-stock void WritePackClientList(const int[] clients, int nClients) {
-	dataBuffer.WriteCell(nClients);
+stock void WritePackClientList(DataPack pack, const int[] clients, int nClients) {
+	pack.WriteCell(nClients);
 	for (int i = 0; i < nClients; i++) {
-		dataBuffer.WriteCell(GetClientSerial(clients[i]));
+		pack.WriteCell(GetClientSerial(clients[i]));
 	}
 }
 
@@ -74,10 +74,10 @@ stock void WritePackClientList(const int[] clients, int nClients) {
  * 
  * @return Number of valid clients.
  */
-stock int ReadPackClientList(int[] clients, int size) {
-	int nPackedClients = dataBuffer.ReadCell(), nAvailableClients;
+stock int ReadPackClientList(DataPack pack, int[] clients, int size) {
+	int nPackedClients = pack.ReadCell(), nAvailableClients;
 	for (int i = 0; i < nPackedClients; i++) {
-		int client = GetClientFromSerial(dataBuffer.ReadCell());
+		int client = GetClientFromSerial(pack.ReadCell());
 		
 		if (client) {
 			clients[nAvailableClients++] = client;
