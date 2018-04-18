@@ -35,7 +35,7 @@ stock bool TF2_HealPlayer(int client, int nHealAmount, bool overheal = false,
 					event.SetInt("amount", nHealAmount);
 					event.SetInt("entindex", client);
 					
-					event.FireToClient(event);
+					event.FireToClient(client);
 					delete event;
 				}
 			}
