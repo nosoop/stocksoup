@@ -16,7 +16,8 @@ enum ParticleAttachment_t {
 	PATTACH_CUSTOMORIGIN,
 	PATTACH_POINT,
 	PATTACH_POINT_FOLLOW,
-	PATTACH_WORLDORIGIN
+	PATTACH_WORLDORIGIN,
+	PATTACH_ROOTBONE_FOLLOW
 };
 
 /**
@@ -37,7 +38,7 @@ enum ParticleAttachment_t {
 stock void TE_SetupTFParticleEffect(const char[] name, const float vecOrigin[3],
 		const float vecStart[3] = NULL_VECTOR, const float vecAngles[3] = NULL_VECTOR,
 		int entity = -1, ParticleAttachment_t attachType = PATTACH_ABSORIGIN,
-		int attachPoint = -1, bool bResetParticles = true) {
+		int attachPoint = -1, bool bResetParticles = false) {
 	int particleTable, particleIndex;
 	
 	if ((particleTable = FindStringTable("ParticleEffectNames")) == INVALID_STRING_TABLE) {
