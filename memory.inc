@@ -21,7 +21,7 @@
  * @return Number of bytes written.  0 is returned on an empty string or a null pointer.
  */
 stock int LoadStringFromAddress(Address addr, char[] buffer, int maxlen,
-		bool &bIsNullPointer = 0) {
+		bool &bIsNullPointer = false) {
 	if (!addr) {
 		return 0;
 	}
