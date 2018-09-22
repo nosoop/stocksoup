@@ -23,6 +23,7 @@
 stock int LoadStringFromAddress(Address addr, char[] buffer, int maxlen,
 		bool &bIsNullPointer = false) {
 	if (!addr) {
+		bIsNullPointer = true;
 		return 0;
 	}
 	
