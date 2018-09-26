@@ -60,8 +60,8 @@ methodmap TFAnnotationEvent < Event {
 		public get() {
 			return this.GetInt("follow_entindex");
 		}
-		public set(int visibilityBitfield) {
-			this.SetInt("follow_entindex", visibilityBitfield);
+		public set(int entity) {
+			this.SetInt("follow_entindex", entity);
 		}
 	}
 	
