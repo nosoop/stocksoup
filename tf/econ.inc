@@ -14,6 +14,19 @@ stock int TF2_GetItemDefinitionIndex(int entity) {
 	return GetEntProp(entity, Prop_Send, "m_iItemDefinitionIndex");
 }
 
+/**
+ * Returns an item's definition index.
+ * 
+ * On invalid entities and entities that are not items, this returns DEFINDEX_UNDEFINED instead
+ * of generating a runtime exception.
+ */
+stock int TF2_GetItemDefinitionIndexSafe(int entity) {
+	if (!IsVAlidEntity(entity) || !HasEntProp(entity, Prop_Send, "m_iItemDefinitionIndex")) {
+		return DEFINDEX_UNDEFINED;
+	}
+	return TF2_GetItemDefinitionIndex(entity);
+}
+
 /** 
  * Creates a wearable entity.
  * 
