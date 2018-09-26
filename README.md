@@ -1,10 +1,16 @@
 # stocksoup
-A mishmashed collection of various SourceMod stock functions.
-Might be useful at some point.
+A mishmashed collection of various SourceMod stock functions that I've written for use in my projects.
+Might be useful to you at some point as well.
 
-## Usage
-Installing stocksoup as a Git submodule means that you'll be targeting a specific revision of the repository; you and possible contributors won't be tripped up by function and include renames whenever I feel like doing them.
-Of course, this is only useful if you're using a git-compatible system for your repository.
+## Usage (simplified)
+For your sanity's sake, just copy the stocks that you need into your own project.
+This repository is a moving target that gets changed fairly often; if you just sync this repository to your main scripting includes, you ~~may~~ will have a bad time if any stock functions change.
+
+## Usage (traditional)
+Install stocksoup as a git submodule.  The directory structure is set up this way with includes at the root so the repository has its own nice little folder to sit in.
+
+Using this as a submodule means effectively pinning the dependencies; you and possible contributors won't be tripped up by function and include renames whenever I feel like doing them.
+Of course, you'll have to be on a git-compatible system for your repository in the first place.
 
 1.  Add the repository as a submodule (as an include relative to your `scripting` directory).
 
