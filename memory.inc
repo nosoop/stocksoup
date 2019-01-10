@@ -16,7 +16,7 @@
  * receives a nullptr and attempts to dereference it (see alliedmodders/sourcemod/issues/874).
  * 
  * If it is necessary to differentiate between an empty string and a null pointer, check if addr
- * is null or pass a reference to bIsNullPointer.
+ * is null before calling the function, or pass a reference to bIsNullPointer.
  * 
  * @return Number of bytes written.  0 is returned on an empty string or a null pointer.
  */
@@ -34,4 +34,12 @@ stock int LoadStringFromAddress(Address addr, char[] buffer, int maxlen,
 		buffer[c] = ch;
 	} while (ch && ++c < maxlen - 1);
 	return c;
+}
+
+/**
+ * Reads a value stored in a memory address and returns it as an address.
+ */
+stock Address DereferencePointer(Address addr) {
+	// maybe someday we'll do 64-bit addresses
+	return view_as<Address>(LoadFromAddress(addr, NumberType_Int32));
 }
