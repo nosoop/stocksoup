@@ -9,6 +9,34 @@
 #define __stocksoup_datapack_included
 
 /**
+ * Packs a client into a data pack with serial value conversion.
+ */
+stock void WritePackClient(DataPack pack, int client) {
+	pack.WriteCell(GetClientSerial(client));
+}
+
+/**
+ * Reads a client from a datapack with serial value conversion.
+ */
+stock int ReadPackClient(DataPack pack) {
+	return GetClientFromSerial(pack.ReadCell());
+}
+
+/**
+ * Packs an entity into a data pack with entity reference conversion.
+ */
+stock void WritePackEntity(DataPack pack, int entity) {
+	pack.WriteCell(EntIndexToEntRef(entity));
+}
+
+/**
+ * Reads an entity from a datapack with entity reference conversion.
+ */
+stock int ReadPackEntity(DataPack pack) {
+	return EntRefToEntIndex(pack.ReadCell());
+}
+
+/**
  * Packs a fixed-size cell array into a data pack.
  */
 stock void WritePackCellArray(DataPack pack, const any[] arr, int size) {
@@ -64,7 +92,7 @@ stock void ReadPackVector(DataPack pack, float vec[3]) {
 stock void WritePackClientList(DataPack pack, const int[] clients, int nClients) {
 	pack.WriteCell(nClients);
 	for (int i = 0; i < nClients; i++) {
-		pack.WriteCell(GetClientSerial(clients[i]));
+		WritePackClient(pack, clients[i]);
 	}
 }
 
@@ -77,7 +105,7 @@ stock void WritePackClientList(DataPack pack, const int[] clients, int nClients)
 stock int ReadPackClientList(DataPack pack, int[] clients, int size) {
 	int nPackedClients = pack.ReadCell(), nAvailableClients;
 	for (int i = 0; i < nPackedClients; i++) {
-		int client = GetClientFromSerial(pack.ReadCell());
+		int client = ReadPackClient(pack);
 		
 		if (client) {
 			clients[nAvailableClients++] = client;
