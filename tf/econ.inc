@@ -21,7 +21,7 @@ stock int TF2_GetItemDefinitionIndex(int entity) {
  * of generating a runtime exception.
  */
 stock int TF2_GetItemDefinitionIndexSafe(int entity) {
-	if (!IsVAlidEntity(entity) || !HasEntProp(entity, Prop_Send, "m_iItemDefinitionIndex")) {
+	if (!IsValidEntity(entity) || !HasEntProp(entity, Prop_Send, "m_iItemDefinitionIndex")) {
 		return DEFINDEX_UNDEFINED;
 	}
 	return TF2_GetItemDefinitionIndex(entity);
