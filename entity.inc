@@ -53,3 +53,26 @@ stock void CopyEntPropVector(int src, int dest, PropType type, const char[] prop
 	GetEntPropVector(src, type, prop, vec, element);
 	SetEntPropVector(dest, type, prop, vec, element);
 }
+
+stock void RemoveEntityNextFrame(int entity) {
+	RequestFrame(OnRemoveEntityFrame, EntIndexToEntRef(entity));
+}
+
+static stock void OnRemoveEntityFrame(int entref) {
+	int entity = EntRefToEntIndex(entref);
+	if (IsValidEntity(entity)) {
+		RemoveEntity(entity);
+	}
+}
+
+stock void RemoveEntityDelayed(int entity, float delay) {
+	CreateTimer(delay, OnRemoveEntityTimer, EntIndexToEntRef(entity), TIMER_FLAG_NO_MAPCHANGE);
+}
+
+static stock Action OnRemoveEntityTimer(Handle timer, int entref) {
+	int entity = EntRefToEntIndex(entref);
+	if (IsValidEntity(entity)) {
+		RemoveEntity(entity);
+	}
+	return Plugin_Handled;
+}
