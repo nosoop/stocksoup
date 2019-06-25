@@ -196,3 +196,23 @@ stock int FindNextSplitInString(int currentSplit, const char[] str, const char[]
 	}
 	return currentSplit + subSplit + strlen(split);
 }
+
+/**
+ * Pads the given string with spaces on the left side so the last non-null character is at the
+ * end of the string.
+ * 
+ * @param buffer			A character buffer with existing text.
+ * @param maxlen			Length of the string.
+ * 
+ * @noreturn
+ */
+stock void LeftPad(char[] buffer, int maxlen) {
+	int buflen = maxlen - 1;
+	int len = strlen(buffer);
+	
+	// copy string into buffer at rightmost position then fill the rest with spaces
+	strcopy(buffer[buflen - len], len + 1, buffer);
+	for (int i; i < buflen - len; i++) {
+		buffer[i] = ' ';
+	}
+}
