@@ -22,3 +22,13 @@ stock int GetEntityModelPath(int entity, char[] buffer, int maxlen) {
 stock int GetEntityTargetName(int entity, char[] buffer, int maxlen) {
 	return GetEntPropString(entity, Prop_Data, "m_iName", buffer, maxlen);
 }
+
+/**
+ * Sets the target name of an entity.
+ * 
+ * @param entity		Edict index.
+ * @param targetName	New target name.
+ */
+stock void SetEntityTargetName(int entity, const char[] targetName) {
+	SetEntPropString(entity, Prop_Data, "m_iName", targetName);
+}
