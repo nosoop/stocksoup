@@ -1,10 +1,13 @@
+/**
+ * Utility functions ported over from the Source SDK (util.cpp).
+ */
+
 #if defined __stocksoup_sdkports_util_included
 	#endinput
 #endif
 
 #define __stocksoup_sdkports_util_included
 
-/* Utility functions ported over from the Source SDK (util.cpp). */
 
 /* Accurate screenfade implementation from Valve below. */
 #define SCREENFADE_FRACBITS 9
