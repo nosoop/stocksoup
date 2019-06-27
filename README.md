@@ -43,6 +43,16 @@ Of course, you'll have to be on a git-compatible system for your repository in t
 
 3.  Commit as usual.
 
+## Releases
+
+If I remember to do so, I may publish a tag on a commit prior to a major breaking change to mark
+commits that projects should be able to move up to without significant problems.
+
+I consider a major breaking change as one that:
+
+* Removes a function, or an argument within a function (keyword changes are not major).
+* Moves functions between filenames in a way that referencing the old include doesn't work.
+
 ## Directory structure
 Pretty simple:
 
