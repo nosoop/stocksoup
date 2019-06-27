@@ -36,3 +36,19 @@ stock int TF2_GetTeamEntity(TFTeam team) {
 	}
 	return INVALID_ENT_REFERENCE;
 }
+
+/**
+ * Returns true if the two teams are in opposition (unassigned / spectating teams do not oppose
+ * any team).
+ */
+bool TF2_IsEnemyTeam(TFTeam team, TFTeam other) {
+	switch (team) {
+		case TFTeam_Red: {
+			return other == TFTeam_Blue;
+		}
+		case TFTeam_Blue: {
+			return other == TFTeam_Red;
+		}
+	}
+	return false;
+}
