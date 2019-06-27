@@ -4,6 +4,8 @@
 
 #define __stocksoup_entity_utils_included
 
+#include <stocksoup/entity_prop_stocks>
+
 stock bool ParentEntity(int parent, int attachment, const char[] attachPoint = "",
 		bool maintainOffset = false) {
 	SetVariantString("!activator");
@@ -15,20 +17,6 @@ stock bool ParentEntity(int parent, int attachment, const char[] attachPoint = "
 				maintainOffset? "SetParentAttachmentMaintainOffset" : "SetParentAttachment",
 				parent, parent);
 	}
-}
-
-/**
- * Copies the entity's model into the specified buffer.
- */
-stock void GetEntityModelPath(int entity, char[] buffer, int maxlen) {
-	GetEntPropString(entity, Prop_Data, "m_ModelName", buffer, maxlen);
-}
-
-/**
- * Attempts to retrieve a target name for an entity.
- */
-stock bool GetEntityTargetName(int entity, char[] target, int maxlen) {
-	return !!GetEntPropString(entity, Prop_Data, "m_iName", buffer, maxlen);
 }
 
 /**
