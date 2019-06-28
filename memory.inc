@@ -38,6 +38,10 @@ stock int LoadStringFromAddress(Address addr, char[] buffer, int maxlen,
 
 /**
  * Reads a value stored in a memory address and returns it as an address.
+ * This currently assumes a 32-bit platform.
+ * 
+ * @param addr			Address to a memory location.
+ * @return				The value stored in the given address as an Address.
  */
 stock Address DereferencePointer(Address addr) {
 	// maybe someday we'll do 64-bit addresses
