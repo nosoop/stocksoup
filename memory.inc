@@ -47,3 +47,28 @@ stock Address DereferencePointer(Address addr) {
 	// maybe someday we'll do 64-bit addresses
 	return view_as<Address>(LoadFromAddress(addr, NumberType_Int32));
 }
+
+/**
+ * Retrieves an entity index from a raw entity handle address.
+ * 
+ * Note that SourceMod's entity conversion routine is an implementation detail that may change.
+ * 
+ * @param addr			Address to a memory location.
+ * @return				Entity index, or -1 if not valid.
+ */
+stock int LoadEntityHandleFromAddress(Address addr) {
+	return EntRefToEntIndex(LoadFromAddress(addr, NumberType_Int32) | (1 << 31));
+}
+
+/**
+ * Stores an entity into a raw entity handle address.
+ * 
+ * Note that SourceMod's entity conversion routine is an implementation detail that may change.
+ * 
+ * @param addr			Address to a memory location.
+ * @param entity		Entity index.
+ */
+stock void StoreEntityHandleToAddress(Address addr, int entity) {
+	// TODO do we need to handle some special cases?
+	StoreToAddress(addr, EntIndexToEntRef(entity) & ~(1 << 31), NumberType_Int32);
+}
