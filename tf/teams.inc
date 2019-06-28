@@ -39,9 +39,13 @@ stock int TF2_GetTeamEntity(TFTeam team) {
 
 /**
  * Returns true if the two teams are in opposition (unassigned / spectating teams do not oppose
- * any team).
+ * any team).  This should be commutative.
+ * 
+ * @param team			First team index.
+ * @param other			Second team index.
  */
-bool TF2_IsEnemyTeam(TFTeam team, TFTeam other) {
+stock bool TF2_IsEnemyTeam(TFTeam team, TFTeam other) {
+	// TODO maybe get the lowest team to avoid redundant comparisons?
 	switch (team) {
 		case TFTeam_Red: {
 			return other == TFTeam_Blue;
