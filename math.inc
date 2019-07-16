@@ -8,7 +8,7 @@
 #define __stocksoup_math_included
 
 stock float LerpFloat(float flPercent, float a, float b) {
-	return A + ((B - A) * flPercent);
+	return a + ((b - a) * flPercent);
 }
 
 /**
