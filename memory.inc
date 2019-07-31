@@ -72,3 +72,37 @@ stock void StoreEntityHandleToAddress(Address addr, int entity) {
 	// TODO do we need to handle some special cases?
 	StoreToAddress(addr, EntIndexToEntRef(entity) & ~(1 << 31), NumberType_Int32);
 }
+
+/**
+ * Returns an entity index from its address by attempting to read the
+ * CBaseEntity::m_RefEHandle member.  This assumes the address of a CBaseEntity is
+ * passed in.
+ * 
+ * @param pEntity		Address of an entity.
+ * @return				Entity index, or -1 if not valid.
+ */
+stock int GetEntityFromAddress(Address pEntity) {
+	static int offs_RefEHandle;
+	if (offs_RefEHandle) {
+		return LoadEntityHandleFromAddress(pEntity + view_as<Address>(offs_RefEHandle));
+	}
+	
+	// if we don't have it already, attempt to lookup offset based on SDK information
+	// CWorld is derived from CBaseEntity so it should have both offsets
+	int offs_angRotation = FindDataMapInfo(0, "m_angRotation"),
+			offs_vecViewOffset = FindDataMapInfo(0, "m_vecViewOffset");
+	if (offs_angRotation == -1) {
+		ThrowError("Could not find offset for ((CBaseEntity) CWorld)::m_angRotation");
+	} else if (offs_vecViewOffset == -1) {
+		ThrowError("Could not find offset for ((CBaseEntity) CWorld)::m_vecViewOffset");
+	} else if ((offs_angRotation + 0x0C) != (offs_vecViewOffset - 0x04)) {
+		char game[32];
+		GetGameFolderName(game, sizeof(game));
+		ThrowError("Could not confirm offset of CBaseEntity::m_RefEHandle "
+				... "(incorrect assumption for game '%s'?)", game);
+	}
+	
+	// offset seems right, cache it for the next call
+	offs_RefEHandle = offs_angRotation + 0x0C;
+	return GetEntityFromAddress(pEntity);
+}
