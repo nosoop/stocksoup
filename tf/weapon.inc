@@ -26,6 +26,20 @@ stock int TF2_GiveWeaponAmmo(int weapon, int amount, bool supressSound = true) {
 	return 0;
 }
 
+
+/**
+ * Get the current amount of ammo a client can carry for a specific weapon.
+ */
+stock int TF2_GetWeaponAmmo(int weapon) {
+	int ammoType = GetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoType");
+	int client = GetEntPropEnt(weapon, Prop_Send, "m_hOwner");
+	
+	if (client > 0 && client <= MaxClients && ammoType != -1) {
+		return GetEntProp(client, Prop_Send, "m_iAmmo", 4, ammoType);
+	}
+	return -1;
+}
+
 /**
  * Directly sets the amount of ammo a client can carry for a specific weapon.
  */
