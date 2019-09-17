@@ -11,6 +11,12 @@
 #include <stocksoup/client>
 #include <tf2_stocks>
 
+enum TauntCamMode {
+	TauntCam_Disabled,
+	TauntCam_Enabled,
+	TauntCam_PersistWhileDead
+};
+
 /**
  * Sets a client's overlay to the appropriate team's invulnerability overlay.
  * 
@@ -37,6 +43,17 @@ stock void TF2_ShowClassSelectPanel(int client) {
 	TFTeam team = TF2_GetClientTeam(client);
 	
 	ShowVGUIPanel(client, team == TFTeam_Blue ? "class_blue" : "class_red");
+}
+
+/**
+ * Sets the taunt cam / third person mode for a given client.
+ * 
+ * @param client		Client to set forced taunt cam on.
+ * @param mode			The preferred taunt cam mode.
+ */
+stock void TF2_SetClientTauntCamMode(int client, TauntCamMode mode = TauntCam_Disabled) {
+	SetVariantInt(view_as<int>(mode));
+	AcceptEntityInput(client, "SetForcedTauntCam");
 }
 
 /**
