@@ -73,3 +73,42 @@ stock void TE_SetupTFParticleEffect(const char[] name, const float vecOrigin[3],
 	
 	TE_WriteNum("m_bResetParticles", bResetParticles ? 1 : 0);
 }
+
+/**
+ * Sets up a TF2 explosion.
+ * 
+ * @param vecOrigin				Position of the explosion.
+ * @param vecNormal				Normal vector.
+ * @param weaponid				Weapon ID (one of the TF_WEAPON_* values).
+ * @param entity				Entity that the effect is applied to, 0 for world.
+ * 								Clamped to 0x7FF.
+ * @param itemDefinitionIndex	Weapon's definition index.
+ * @param sound					Sound index?
+ * @param particleIndex			Custom particle index.
+ */
+stock void TE_SetupTFExplosion(const float vecOrigin[3],
+		const float vecNormal[3] = { 0.0, 0.0, 1.0 }, int weaponid = TF_WEAPON_NONE,
+		int entity = 0, int definitionIndex = -1, int sound = -1, int particleIndex = -1) {
+	TE_Start("TFExplosion");
+	
+	TE_WriteFloat("m_vecOrigin[0]", vecOrigin[0]);
+	TE_WriteFloat("m_vecOrigin[1]", vecOrigin[1]);
+	TE_WriteFloat("m_vecOrigin[2]", vecOrigin[2]);
+	
+	TE_WriteVector("m_vecNormal", vecNormal);
+	
+	// CTFWeaponBase::GetWeaponID()
+	TE_WriteNum("m_iWeaponID", weaponid);
+	
+	// entity it is applied to, 0 for world -- if it's on a stickybomb it's 0x7FF
+	TE_WriteNum("entindex", entity);
+	
+	// item definition index
+	TE_WriteNum("m_nDefID", definitionIndex & 0xFFFF);
+	
+	// sound ??
+	TE_WriteNum("m_nSound", sound & 0xFFFF);
+	
+	// written as a short, -1 == 0xFFFF
+	TE_WriteNum("m_iCustomParticleIndex", particleIndex & 0xFFFF);
+}
