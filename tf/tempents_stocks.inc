@@ -83,7 +83,8 @@ stock void TE_SetupTFParticleEffect(const char[] name, const float vecOrigin[3],
  * @param entity				Entity that the effect is applied to, 0 for world.
  * 								Clamped to 0x7FF.
  * @param itemDefinitionIndex	Weapon's definition index.
- * @param sound					Sound index?
+ * @param sound					WeaponSound_t enum value.  See mp/src/game/shared/weapon_parse.h
+ * 								in the 2013 Source SDK.
  * @param particleIndex			Custom particle index.
  */
 stock void TE_SetupTFExplosion(const float vecOrigin[3],
@@ -101,12 +102,13 @@ stock void TE_SetupTFExplosion(const float vecOrigin[3],
 	TE_WriteNum("m_iWeaponID", weaponid);
 	
 	// entity it is applied to, 0 for world -- if it's on a stickybomb it's 0x7FF
+	// (or more likely clamped to maximum edicts)
 	TE_WriteNum("entindex", entity);
 	
 	// item definition index
 	TE_WriteNum("m_nDefID", definitionIndex & 0xFFFF);
 	
-	// sound ??
+	// WeaponSound_t enum value
 	TE_WriteNum("m_nSound", sound & 0xFFFF);
 	
 	// written as a short, -1 == 0xFFFF
