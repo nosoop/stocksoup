@@ -4,8 +4,7 @@
 
 #define __stocksoup_tf_tempents_stocks_included
 
-#include <sdktools_stringtables>
-#include <sdktools_tempents>
+#include <tf2_stocks>
 
 /**
  * Enum values from `src/game/shared/particle_parse.h`.
