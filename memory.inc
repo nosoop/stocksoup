@@ -61,7 +61,7 @@ stock int LoadEntityHandleFromAddress(Address addr) {
 }
 
 /**
- * Stores an entity into a raw entity handle address.
+ * Stores an entity into a raw entity handle address.  Stores zero if the entity is not valid.
  * 
  * Note that SourceMod's entity conversion routine is an implementation detail that may change.
  * 
@@ -69,8 +69,8 @@ stock int LoadEntityHandleFromAddress(Address addr) {
  * @param entity		Entity index.
  */
 stock void StoreEntityHandleToAddress(Address addr, int entity) {
-	// TODO do we need to handle some special cases?
-	StoreToAddress(addr, EntIndexToEntRef(entity) & ~(1 << 31), NumberType_Int32);
+	StoreToAddress(addr, IsValidEntity(entity)? EntIndexToEntRef(entity) & ~(1 << 31) : 0,
+			NumberType_Int32);
 }
 
 /**
