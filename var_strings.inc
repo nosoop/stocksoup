@@ -9,6 +9,8 @@
 
 #define __stocksoup_var_strings_included
 
+#include <stocksoup/string>
+
 /**
  * Reads a float value associated with a key.
  */
@@ -63,15 +65,21 @@ stock bool ReadStringVar(const char[] varstring, const char[] key, char[] buffer
 /**
  * Returns the position of the first character after the first instance of `key=`, or -1 if the
  * key doesn't exist.
+ * 
+ * The instance of `key=` will either be at the start of the string or preceded by a space.
  */
 static stock int FindKeyAssignInString(const char[] varstring, const char[] key) {
 	char keyBuf[32];
 	strcopy(keyBuf, sizeof(keyBuf), key);
 	StrCat(keyBuf, sizeof(keyBuf), "=");
 	
-	int iValPos = StrContains(varstring, keyBuf);
-	if (iValPos == -1) {
-		return -1;
+	int keylen = strlen(keyBuf);
+	int split = -1;
+	while ((split = FindNextSplitInString(split, varstring, keyBuf)) != -1) {
+		int start = split - keylen;
+		if (!start || varstring[start - 1] == ' ') {
+			return split;
+		}
 	}
-	return iValPos + strlen(keyBuf);
+	return split;
 }
