@@ -109,3 +109,36 @@ stock bool FindNonCollideHullPositionExtent(const float vecPosition[3],
 	}
 	return false;
 }
+
+/**
+ * Obtains the position in the world that a client is looking at.
+ * 
+ * @param client			The client to check.
+ * @param vecAimPoint		The buffer to store the position in the world on success.
+ * @param filter			The trace entity filter function to call when performing the check.
+ * @param data				A value to pass into the filter function callback.
+ *
+ * @return true if a valid position is found
+ */
+stock bool GetClientAimEndPosition(int client, float vecAimPoint[3],
+		TraceEntityFilter filter = INVALID_FUNCTION, any data = 0) {
+	float angEye[3], vecStartPosition[3];
+	GetClientEyePosition(client, vecStartPosition);
+	GetClientEyeAngles(client, angEye);
+	
+	Handle trace = TR_TraceRayFilterEx(vecStartPosition, angEye, MASK_SHOT, RayType_Infinite,
+			filter != INVALID_FUNCTION? filter : TraceEntityFilterPlayer, data);
+	bool result = TR_DidHit(trace);
+	if (TR_DidHit(trace)) {
+		TR_GetEndPosition(vecAimPoint, trace);
+	}
+	delete trace;
+	return result;
+}
+
+/**
+ * Internal callback function that ignores player entities.
+ */
+static stock bool TraceEntityFilterPlayer(int entity, int contentsMask) {
+	return entity > MaxClients || !entity;
+}
