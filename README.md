@@ -65,4 +65,4 @@ Pretty simple:
 **Is the name of the library a reference to Weird Al's [*Talk Soup*][yt-talksoup]?**
 Yes.  Yes it is.
 
-[yt-talksoup]: https://youtu.be/555ndsDM2qo
+[yt-talksoup]: https://youtu.be/BV6hGJLm92w
