@@ -60,3 +60,11 @@ stock int GetApplicationServerVersion() {
 	}
 	return 0;
 }
+
+stock int GetAppID() {
+	char buffer[16];
+	if (GetSteamINFData().GetString("appID", buffer, sizeof(buffer))) {
+		return StringToInt(buffer);
+	}
+	return 0;
+}
