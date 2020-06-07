@@ -52,7 +52,7 @@ stock bool TF2_HealPlayer(int client, int nHealAmount, bool overheal = false,
  * Returns the current maximum amount of health that a player can have.
  */
 stock int TF2_GetPlayerMaxHealth(int client) {
-	return GetEntProp(GetPlayerResourceEntity(), Prop_Send, "m_iMaxHealth", _, client);
+	return GetEntProp(client, Prop_Data, "m_iMaxHealth");
 }
 
 /**
