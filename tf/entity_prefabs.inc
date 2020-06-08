@@ -5,7 +5,7 @@
 #endif
 
 #pragma newdecls optional
-#include <tf2>
+#include <tf2_stocks>
 #include <stocksoup/entity_tools>
 #pragma newdecls required
 
@@ -79,4 +79,33 @@ stock int TF2_AttachColoredGlow(int entity, int rgba[4]) {
 		AcceptEntityInput(glow, "SetGlowColor");
 	}
 	return glow;
+}
+
+/**
+ * Creates a tf_generic_bomb entity with the given properties.
+ */
+stock int TF2_CreateGenericBomb(const float vecOrigin[3], float damage = 0.0,
+		float radius = 0.0, int health = 1, const char[] particle = "", const char[] sound = "",
+		const char[] model = "") {
+	int bomb = CreateEntityByName("tf_generic_bomb");
+	DispatchKeyValueVector(bomb, "origin", vecOrigin);
+	DispatchKeyValueFloat(bomb, "damage", damage);
+	DispatchKeyValueFloat(bomb, "radius", radius);
+	DispatchKeyValueFloat(bomb, "health", float(health));
+	
+	if (strlen(particle) > 0) {
+		DispatchKeyValue(bomb, "explode_particle", particle);
+	}
+	
+	if (strlen(sound) > 0) {
+		DispatchKeyValue(bomb, "sound", sound);
+	}
+	
+	DispatchSpawn(bomb);
+	
+	if (strlen(model) > 0) {
+		SetEntityModel(bomb, model);
+	}
+	
+	return bomb;
 }
