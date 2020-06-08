@@ -50,6 +50,14 @@ stock bool TF2_HealPlayer(int client, int nHealAmount, bool overheal = false,
 
 /**
  * Returns the current maximum amount of health that a player can have.
+ * This includes modifiers due to attributes.
+ * 
+ * @note The value may be inaccurate if the value was changed recently; updates are not instant.
+ *       If you need instant changes, it'd be better to call the game's
+ *       `CTFPlayerShared::GetMaxBuffedHealth()` function directly.
+ * 
+ * @param client	Client index.
+ * @return			Integer value of player's current maximum health.
  */
 stock int TF2_GetPlayerMaxHealth(int client) {
 	return GetEntProp(GetPlayerResourceEntity(), Prop_Send, "m_iMaxHealth", _, client);
