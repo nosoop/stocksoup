@@ -30,7 +30,7 @@ stock int LoadStringFromAddress(Address addr, char[] buffer, int maxlen,
 	int c;
 	char ch;
 	do {
-		ch = LoadFromAddress(addr + view_as<Address>(c), NumberType_Int8);
+		ch = view_as<int>(LoadFromAddress(addr + view_as<Address>(c), NumberType_Int8));
 		buffer[c] = ch;
 	} while (ch && ++c < maxlen - 1);
 	return c;
