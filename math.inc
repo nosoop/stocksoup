@@ -43,3 +43,19 @@ stock float NormalizeAngle(float value) {
 	// https://stackoverflow.com/a/43780476
 	return value - 360.0 * RoundToFloor((value + 180.0) / 360.0);
 }
+
+/**
+ * Converts a signed 8-bit value into a signed 32-bit value.
+ * Any higher bits set will be ignored and replaced accordingly.
+ */
+stock int SignExtendInt8(int byte) {
+	return (byte >> 7 & 1)? 0xFFFFFF00 | byte : 0x000000FF & byte;
+}
+
+/**
+ * Converts a signed 16-bit value into a signed 32-bit value.
+ * Any higher bits set will be ignored and replaced accordingly.
+ */
+stock int SignExtendInt16(int word) {
+	return (word >> 15 & 1)? 0xFFFF0000 | word : 0x0000FFFF & word;
+}
