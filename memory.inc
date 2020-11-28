@@ -8,6 +8,8 @@
 
 #define __stocksoup_memory_included
 
+#include <stocksoup/math>
+
 /**
  * Loads a null-terminated string from the given address.
  * 
@@ -105,4 +107,26 @@ stock int GetEntityFromAddress(Address pEntity) {
 	// offset seems right, cache it for the next call
 	offs_RefEHandle = offs_angRotation + 0x0C;
 	return GetEntityFromAddress(pEntity);
+}
+
+/**
+ * Loads a double (64-bit) value from a given address and returns the value as a float.
+ */
+float LoadDoubleFromAddressAsFloat(Address addr) {
+	int dblVal[2];
+	dblVal[0] = LoadFromAddress(addr, NumberType_Int32);
+	dblVal[1] = LoadFromAddress(addr + view_as<Address>(0x04), NumberType_Int32);
+	
+	return DoubleToFloat(dblVal, false);
+}
+
+/**
+ * Stores a float value into a given address as a double value.
+ */
+void StoreDoubleToAddressFromFloat(Address addr, float value) {
+	int dblVal[2];
+	FloatToDouble(value, dblVal);
+	
+	StoreToAddress(addr, dblVal[0], NumberType_Int32);
+	StoreToAddress(addr + view_as<Address>(0x04), dblVal[1], NumberType_Int32);
 }

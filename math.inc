@@ -59,3 +59,69 @@ stock int SignExtendInt8(int byte) {
 stock int SignExtendInt16(int word) {
 	return (word >> 15 & 1)? 0xFFFF0000 | word : 0x0000FFFF & word;
 }
+
+/** 
+ * The double values below can be represented by the following enum struct:
+ * 
+ *     enum struct Double {
+ *         int low;
+ *         int high;
+ *     }
+ */
+
+/**
+ * Performs a double conversion to a float value.
+ * Lower 32 bits of the double should be in index zero.
+ */
+stock float DoubleToFloat(const int dblVal[2], bool clamp = false) {
+	int sign = (dblVal[1] >> 31) & 1;
+	
+	// extract truncated mantissa from both cells
+	int mantissa = ((dblVal[1] << 3) & 0x007FFFFF) | (dblVal[0] >> 29);
+	int expdbl_2 = (dblVal[1] >> 20) & 0x7FF;
+	
+	int expflt_2 = (expdbl_2 - 1023) + 127;
+	if (expdbl_2 == 0x7FF) {
+		// special case: infinity or subnormal
+		expflt_2 = 0xFF;
+		mantissa = (mantissa || dblVal[0]);
+	} else if (expdbl_2 == 0) {
+		// special case: no exponent
+		expflt_2 = 0;
+	} else if (expflt_2 > 0xFE) {
+		// case: exponent is larger than can be represented
+		// TODO test case for smaller exponent values
+		if (!clamp) {
+			ThrowError("Double value %08x%08x is outside of float value range", dblVal[1], dblVal[0]);
+		}
+		expflt_2 = 0xFE;
+		mantissa = 0x007FFFFFF;
+	}
+	
+	return view_as<float>((sign << 31) | (expflt_2 << 23) | (mantissa & 0x007FFFFF));
+}
+
+/**
+ * Performs a float conversion to a double value.
+ * Lower bits of the double in index zero.
+ */
+stock void FloatToDouble(float flValue, int dblVal[2]) {
+	int bytesFloat = view_as<int>(flValue);
+	
+	int sign = (bytesFloat >> 31) & 1;
+	int exp_2 = (bytesFloat >> 23) & 0xFF;
+	int mantissa = bytesFloat & 0x007FFFFF;
+	
+	int expdbl_2 = (1023 + (exp_2 - 127)) & 0x7FF;
+	if (exp_2 == 0xFF) {
+		// special case: infinity or subnormal
+		expdbl_2 = 0x7FF;
+	} else if (exp_2 == 0) {
+		// special case: no exponent
+		expdbl_2 = 0;
+	}
+	
+	// no bits in lower three bytes of double
+	dblVal[0] = (mantissa << 29);
+	dblVal[1] = (sign << 31) | (expdbl_2 << 20) | (mantissa >> 3);
+}
