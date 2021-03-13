@@ -125,3 +125,12 @@ stock void FloatToDouble(float flValue, int dblVal[2]) {
 	dblVal[0] = (mantissa << 29);
 	dblVal[1] = (sign << 31) | (expdbl_2 << 20) | (mantissa >> 3);
 }
+
+/**
+ * Returns a vector containing the midpoint between two points.
+ */
+stock void GetCenterFromPoints(const float pt1[3], const float pt2[3], float center[3]) {
+	center[0] = pt1[0] + pt2[0] / 2.0;
+	center[1] = pt1[1] + pt2[1] / 2.0;
+	center[2] = pt1[2] + pt2[2] / 2.0;
+}
