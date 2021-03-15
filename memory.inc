@@ -112,7 +112,7 @@ stock int GetEntityFromAddress(Address pEntity) {
 /**
  * Loads a double (64-bit) value from a given address and returns the value as a float.
  */
-float LoadDoubleFromAddressAsFloat(Address addr) {
+stock float LoadDoubleFromAddressAsFloat(Address addr) {
 	int dblVal[2];
 	dblVal[0] = LoadFromAddress(addr, NumberType_Int32);
 	dblVal[1] = LoadFromAddress(addr + view_as<Address>(0x04), NumberType_Int32);
@@ -123,7 +123,7 @@ float LoadDoubleFromAddressAsFloat(Address addr) {
 /**
  * Stores a float value into a given address as a double value.
  */
-void StoreDoubleToAddressFromFloat(Address addr, float value) {
+stock void StoreDoubleToAddressFromFloat(Address addr, float value) {
 	int dblVal[2];
 	FloatToDouble(value, dblVal);
 	
