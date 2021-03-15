@@ -31,7 +31,8 @@ enum TFVoiceCommand {
 	Voice_Negative,
 	Voice_NiceShot,
 	Voice_GoodJob,
-	Voice_AskForBall
+	Voice_AskForBall,
+	NUM_TF_VOICE_COMMANDS
 };
 
 TFVoiceCommand VOICE_MENU[][] = {
@@ -77,7 +78,7 @@ int VOICE_MENU_ITEMS[] = { 9, 9, 8 };
  */
 typedef TFVoiceCommandCallback = function Action(int client, TFVoiceCommand command);
 
-static Handle g_VoiceForwards[TFVoiceCommand];
+static Handle g_VoiceForwards[NUM_TF_VOICE_COMMANDS];
 
 stock bool RegisterVoiceCommandCallback(TFVoiceCommand command,
 		TFVoiceCommandCallback callback) {
