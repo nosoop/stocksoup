@@ -25,12 +25,16 @@
  */
 stock bool CreateDirectories(const char[] path, int mode, bool use_valve_fs = false,
 		const char[] valve_path_id = "DEFAULT_WRITE_PATH") {
+	char normalizedPath[PLATFORM_MAX_PATH];
+	strcopy(normalizedPath, sizeof(normalizedPath), path);
+	NormalizePathToPOSIX(normalizedPath);
+	
 	char partialPathBuffer[PLATFORM_MAX_PATH];
 	
 	int p = -1;
-	while ( (p = FindNextCharInString(p, path, '/')) != -1 ) {
+	while ( (p = FindNextCharInString(p, normalizedPath, '/')) != -1 ) {
 		// exclude trailing forward slash
-		strcopy(partialPathBuffer, p, path);
+		strcopy(partialPathBuffer, p, normalizedPath);
 		
 		if (!DirExists(partialPathBuffer, use_valve_fs, valve_path_id)
 				&& !CreateDirectory(partialPathBuffer, mode, use_valve_fs, valve_path_id)) {
@@ -83,7 +87,8 @@ stock ArrayList GetFilesInDirectoryRecursive(const char[] path, bool use_valve_f
 			
 			// SourceMod doesn't do native path separators without BuildPath...
 			// ... forward slashes it is.
-			FormatEx(fullpath, sizeof(fullpath), "%s/%s", currentPath, currentEntry);
+			FormatEx(fullpath, sizeof(fullpath), "%s%c%s",
+					currentPath, DumbHackTo_GetPathComponentSeparator(), currentEntry);
 			
 			switch (type) {
 				case FileType_File: {
@@ -103,4 +108,35 @@ stock ArrayList GetFilesInDirectoryRecursive(const char[] path, bool use_valve_f
 	}
 	delete paths;
 	return files;
+}
+
+/**
+ * Normalizes the input path to use POSIX path component separators only on non-POSIX systems.
+ */
+stock void NormalizePathToPOSIX(char[] path) {
+	char sep = DumbHackTo_GetPathComponentSeparator();
+	if (sep == '/') {
+		return;
+	}
+	
+	for (int i; path[i]; i++) {
+		if (path[i] == sep) {
+			path[i] = '/';
+		}
+	}
+}
+
+/**
+ * Returns the path component separator.  This is '/' for POSIX and '\\' for Windows.
+ */
+static stock char DumbHackTo_GetPathComponentSeparator() {
+	static char result;
+	
+	if (!result) {
+		char dir[PLATFORM_MAX_PATH];
+		BuildPath(Path_SM, dir, sizeof(dir), "%s", "/");
+		
+		result = dir[strlen(dir) - 1];
+	}
+	return result;
 }
