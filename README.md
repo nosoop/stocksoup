@@ -15,8 +15,6 @@ Of course, you'll have to be on a git-compatible system for your repository in t
 1.  Add the repository as a submodule (as an include relative to your `scripting` directory).
 
         $ git submodule add https://github.com/nosoop/stocksoup scripting/include/stocksoup
-        
-    If you're using Github for Windows (like I am), you'll probably have to perform the commit via Git Bash, too.  Commits on top of the submodule addition can proceed as normal.
 
 2.  If not already, make sure your SourcePawn compiler looks into the custom include directory.
 
@@ -37,7 +35,7 @@ Of course, you'll have to be on a git-compatible system for your repository in t
 ## Updates (as a submodule)
 1.  Pull in updates for all the submodules.
 
-        $ git submodule update --remote --merge
+        $ git submodule update --remote --checkout
 
 2.  Make sure your project actually builds; fix things as necessary.  No stability guaranteed.
 
@@ -50,15 +48,15 @@ commits that projects should be able to move up to without significant problems.
 
 I consider a major breaking change as one that:
 
-* Removes a function, or an argument within a function (keyword changes are not major).
-* Moves functions between filenames in a way that referencing the old include doesn't work.
+- Removes a function, or an argument within a function (keyword changes are not major).
+- Moves functions between filenames in a way that referencing the old include doesn't work.
 
 ## Directory structure
 Pretty simple:
 
-*   Base directory has stocks applicable to all games.
-    *   The `sdkports/` directory contains ports of select Source SDK functions.
-*   Other subdirectories have stocks applicable to a specific mod.  Mainly TF2, since that's the only game I write for.  Any stock functions for a specific game should be prefixed with a game abbreviation, similar to SourceMod functions.
+- Base directory has stocks applicable to all games.
+    - The `sdkports/` directory contains ports of select Source SDK functions.
+- Other subdirectories have stocks applicable to a specific mod.  Mainly TF2, since that's the only game I write for.  Any stock functions for a specific game should be prefixed with a game abbreviation, similar to SourceMod functions.
 
 ## Questions and Answers
 
