@@ -13,6 +13,9 @@
  * Creates a directory, creating parent directories if they don't exist.
  * 
  * @param path			Path to create.  Parent directories that do not exist are also created.
+ * 						On POSIX systems, a backslash will be treated as part of the folder name
+ * 						(this may not work -- for simplicity's sake stick to '/' no matter the
+ * 						platform).
  * @param mode			Permissions (default is o=rx,g=rx,u=rwx).  Note that folders must have
  *						the execute bit set on Linux.  On Windows, the mode is ignored.
  * 						Nonexisting directories will be created with these permissions; existing
