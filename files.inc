@@ -52,11 +52,12 @@ stock bool CreateDirectories(const char[] path, int mode, bool use_valve_fs = fa
 
 /**
  * Returns an ArrayList containing the paths of all files in the given directory and its
- * subdirectories.  Each entry contains the input path as the prefix.
+ * subdirectories.  Each entry contains the input path as the prefix, and directory separators
+ * will use the system's native form ('\' on Windows, '/' on POSIX).
  * 
  * This performs a breadth-first iteration.
  * 
- * @param path           Path to open.
+ * @param path           Starting path to search files.
  * @param use_valve_fs   If true, the Valve file stem will be used instead.  This can be used to
  *                       find files in the game's Valve search paths, rather than solely files
  *                       existing in the gamedir.
