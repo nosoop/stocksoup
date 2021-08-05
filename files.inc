@@ -42,3 +42,65 @@ stock bool CreateDirectories(const char[] path, int mode, bool use_valve_fs = fa
 	return DirExists(path, use_valve_fs, valve_path_id) ||
 			CreateDirectory(path, mode, use_valve_fs, valve_path_id);
 }
+
+/**
+ * Returns an ArrayList containing the paths of all files in the given directory and its
+ * subdirectories.  Each entry contains the input path as the prefix.
+ * 
+ * This performs a breadth-first iteration.
+ * 
+ * @param path           Path to open.
+ * @param use_valve_fs   If true, the Valve file stem will be used instead.  This can be used to
+ *                       find files in the game's Valve search paths, rather than solely files
+ *                       existing in the gamedir.
+ * @param valve_path_id  If use_valve_fs, a search path from gameinfo or NULL_STRING for all
+ *                       search paths.
+ */
+stock ArrayList GetFilesInDirectoryRecursive(const char[] path, bool use_valve_fs = false,
+		const char[] valve_path_id = "GAME") {
+	ArrayList files = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
+	
+	ArrayList paths = new ArrayList(ByteCountToCells(PLATFORM_MAX_PATH));
+	paths.PushString(path);
+	
+	/**
+	 * Check paths.Length on every iteration since we store tracked paths, just in case we 
+	 * somehow get caught in a loop.
+	 */
+	for (int i; i < paths.Length; i++) {
+		char currentPath[PLATFORM_MAX_PATH], currentEntry[PLATFORM_MAX_PATH];
+		FileType type;
+		
+		paths.GetString(i, currentPath, sizeof(currentPath));
+		
+		DirectoryListing listing = OpenDirectory(currentPath, use_valve_fs, valve_path_id);
+		if (!listing) {
+			continue;
+		}
+		
+		while (listing.GetNext(currentEntry, sizeof(currentEntry), type)) {
+			char fullpath[PLATFORM_MAX_PATH];
+			
+			// SourceMod doesn't do native path separators without BuildPath...
+			// ... forward slashes it is.
+			FormatEx(fullpath, sizeof(fullpath), "%s/%s", currentPath, currentEntry);
+			
+			switch (type) {
+				case FileType_File: {
+					files.PushString(fullpath);
+				}
+				case FileType_Directory: {
+					if (StrEqual(currentEntry, ".") || StrEqual(currentEntry, "..")) {
+						continue;
+					}
+					if (paths.FindString(fullpath) == -1) {
+						paths.PushString(fullpath);
+					}
+				}
+			}
+		}
+		delete listing;
+	}
+	delete paths;
+	return files;
+}
