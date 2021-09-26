@@ -216,3 +216,35 @@ stock void LeftPad(char[] buffer, int maxlen) {
 		buffer[i] = ' ';
 	}
 }
+
+/**
+ * Returns text in a string up until a certain character sequence is reached, with additional
+ * parameters to make iteration convenient.
+ *
+ * @param source           Source input string.
+ * @param split            A string which specifies a search point to break at.
+ * @param part             Buffer to store string part.
+ * @param partLen          Maximum length of the string part buffer.
+ * @param start            Starting position to search from.
+ * @param copyRemainder    True (default) to ignore delimiters after last piece, false discards
+ *                         excess pieces.
+ * @return                 -1 if no match was found; otherwise, an index into source marking the
+ *                         first index after the last searched text.  The index is always
+ *                         relative to the start of the input string.  If copyRemainder is true,
+ *                         the index will be at the end of the string.
+ */
+stock int SplitStringIter(const char[] source, const char[] split, char[] part, int partlen,
+		int start = 0, bool copyRemainder = true) {
+	int idx;
+	
+	if ((idx = SplitString(source[start], split, part, partlen)) != -1) {
+		return start + idx;
+	} else if (copyRemainder) {
+		int remaining = strlen(source[start]);
+		if (remaining) {
+			strcopy(part, partlen, source[start]);
+			return start + remaining;
+		}
+	}
+	return -1;
+}
