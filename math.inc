@@ -134,3 +134,16 @@ stock void GetCenterFromPoints(const float pt1[3], const float pt2[3], float cen
 	center[1] = pt1[1] + pt2[1] / 2.0;
 	center[2] = pt1[2] + pt2[2] / 2.0;
 }
+
+/**
+ * Calculates the width of the forward view cone as a dot product result from the given angle.
+ * This manually calculates the value of CBaseCombatCharacter's `m_flFieldOfView` data property.
+ *
+ * For reference: https://github.com/ValveSoftware/source-sdk-2013/blob/master/sp/src/game/server/hl2/npc_bullseye.cpp#L151
+ *
+ * @param angle     The FOV value in degree
+ * @return          Width of the forward view cone as a dot product result
+ */
+stock float GetFOVDotProduct(float angle) {
+	return Cosine(DegToRad(angle) / 2.0);
+}

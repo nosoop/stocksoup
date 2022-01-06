@@ -18,7 +18,7 @@
  * @param flCosHalfFOV		The width of the forward view cone as a dot product result. For
  * 							subclasses of CBaseCombatCharacter, you can use the
  * 							`m_flFieldOfView` data property.  To manually calculate for a
- * 							desired FOV, use `cos(0.5 * FOV)`.
+ * 							desired FOV, use `GetFOVDotProduct(angle)` from math.inc.
  * @return					True if the point is within view from the source position at the
  * 							specified FOV.
  */
