@@ -10,6 +10,39 @@
 #include <stocksoup/string>
 
 /**
+ * Copies the contents of the file located at `source` to the path specified by `dest`.  No
+ * other information (e.g. metadata) is copied.
+ * 
+ * @param source       Path to source file.
+ * @param dest         Path to destination.  Any file present is overwritten.
+ * @error              Source / destination file(s) could not be opened for reading / writing.
+ */
+void CopyFile(const char[] source, const char[] dest) {
+	if (!FileExists(source)) {
+		ThrowError("Source file \"%s\" does not exist", source);
+	}
+	
+	File srcFile = OpenFile(source, "rb");
+	File dstFile = OpenFile(dest, "wb");
+	
+	if (!srcFile) {
+		ThrowError("Failed to open source file \"%s\"", source);
+	} else if (!dstFile) {
+		ThrowError("Failed to open destination file \"%s\"", dest);
+	}
+	
+	int buffer[4096];
+	int numRead;
+	do {
+		numRead = srcFile.Read(buffer, sizeof(buffer), 1);
+		dstFile.Write(buffer, numRead, 1);
+	} while (numRead > 0);
+	
+	delete srcFile;
+	delete dstFile;
+}
+
+/**
  * Creates a directory, creating parent directories if they don't exist.
  * 
  * @param path			Path to create.  Parent directories that do not exist are also created.
