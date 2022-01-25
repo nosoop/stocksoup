@@ -17,7 +17,7 @@
  * @param dest         Path to destination.  Any file present is overwritten.
  * @error              Source / destination file(s) could not be opened for reading / writing.
  */
-void CopyFile(const char[] source, const char[] dest) {
+stock void CopyFile(const char[] source, const char[] dest) {
 	if (!FileExists(source)) {
 		ThrowError("Source file \"%s\" does not exist", source);
 	}
