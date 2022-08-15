@@ -46,7 +46,7 @@ stock int GetNativeEntity(int param, bool allowNull = false) {
 			return INVALID_ENT_REFERENCE;
 		}
 		ThrowNativeError(SP_ERROR_NATIVE, "Entity is NULL (param %d)", param);
-	} else if (!IsValidEntity(param)) {
+	} else if (!IsValidEntity(entity)) {
 		ThrowNativeError(SP_ERROR_NATIVE, "Entity %d is invalid (param %d)", entity, param);
 	}
 	return entity;
