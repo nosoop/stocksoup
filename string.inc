@@ -248,3 +248,48 @@ stock int SplitStringIter(const char[] source, const char[] split, char[] part, 
 	}
 	return -1;
 }
+
+/**
+ * Consumes a string with whitespace-separated floating point numbers, storing results in a
+ * given array.  This continues until the end of the string is reached, it has parsed as many
+ * values as the array can hold, or zero characters have been consumed.
+ * 
+ * @param str          String to convert into float values.
+ * @param arr          Array to store float values in.  No values are overwritten unless parsing
+ *                     succeeds; ensure you've reinitialized any reused arrays.
+ * @param length       Length of the array.
+ * @param bytesread    Number of characters consumed.
+ * @return             Number of values parsed.
+ */
+stock int StringToFloatArray(const char[] str, float[] arr, int length, int &bytesread = 0) {
+	float res;
+	int n, c;
+	for (int i; (i = StringToFloatEx(str[c], res)) && n < length; c += i) {
+		arr[n++] = res;
+	}
+	bytesread = c;
+	return n;
+}
+
+/**
+ * Consumes a string with whitespace-separated integers, storing results in a given array.  This
+ * continues until the end of the string is reached, it has parsed as many values as the array
+ * can hold, or zero characters have been consumed.
+ * 
+ * @param str          String to convert into integer values.
+ * @param arr          Array to store integer values in.  No values are overwritten unless
+ *                     parsing succeeds; ensure you've reinitialized any reused arrays.
+ * @param length       Length of the array.
+ * @param bytesread    Number of characters consumed.
+ * @param nBase        Numerical base to use.  10 is default.
+ * @return             Number of values parsed.
+ */
+stock int StringToIntArray(const char[] str, int[] arr, int length, int &bytesread = 0,
+		int nBase = 10) {
+	int n, c;
+	for (int i, res; (i = StringToIntEx(str[c], res, nBase)); c += i) {
+		arr[n++] = res;
+	}
+	bytesread = c;
+	return n;
+}
