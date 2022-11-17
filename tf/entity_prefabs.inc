@@ -70,7 +70,7 @@ stock int TF2_AttachColoredGlow(int entity, int rgba[4]) {
 	if (IsValidEntity(glow)) {
 		char glowTarget[PLATFORM_MAX_PATH];
 		
-		GetEntityTargetName(entity, glowTarget, sizeof(glowTarget), true);
+		GetEntityTargetName(entity, glowTarget, sizeof(glowTarget));
 		DispatchKeyValue(glow, "target", glowTarget);
 		
 		DispatchSpawn(glow);
