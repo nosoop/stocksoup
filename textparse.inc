@@ -8,34 +8,55 @@
  * Translates a 16-bit UCS2 code unit to its UTF8 variable-width equivalent.
  * Lifted from DoctorMcKay/enhanced_items.sp
  * 
+ * @param data      A 16-bit value representing the character.
  * @param buffer    Buffer to store the result.  The result is up to four bytes comprising a
  *                  single character, then a null terminator (for convenience in performing
  *                  string operations).
  * @return          Number of bytes in the character (excluding null terminator).  If reading
  *                  failed, 0 is returned.
+ * @error           Received a value in the surrogate pair range.
  */
 stock int DecodeUTF16LEChar(int data, char buffer[5]) {
 	int n;
 	if (data < 0x80) {
 		buffer[n++] = data;
 	} else if (data < 0x800) {
-		buffer[n++] = (data >> 6) | 0xC0;
+		buffer[n++] = ((data >> 6) & 0x1F) | 0xC0;
 		buffer[n++] = (data & 0x3F) | 0x80;
-	} else if (data < 0xFFFF && data >= 0xD800 && data <= 0xDFFF) {
-		buffer[n++] = (data >> 12) | 0xE0;
+	} else if (0xD800 <= data <= 0xDFFF) {
+		// refuse to decode a surrogate pair here
+		ThrowError("UTF-16 character %04x is in the surrogate pair range; "
+				... "get the next 16-bit value and use DecodeUTF16LESurrogatePair", data);
+	} else if (data <= 0xFFFF) {
+		buffer[n++] = ((data >> 12) & 0x0F) | 0xE0;
 		buffer[n++] = ((data >> 6) & 0x3F) | 0x80;
 		buffer[n++] = (data & 0x3F) | 0x80;
-	} else if (data >= 0x10000 && data < 0x10FFFF) {
-		buffer[n++] = (data >> 18) | 0xF0;
-		buffer[n++] = ((data >> 12) & 0x3F) | 0x80;
-		buffer[n++] = ((data >> 6) & 0x3F) | 0x80;
-		buffer[n++] = (data & 0x3F) | 0x80;
-	} else {
-		// 16-bit code units equivalent to unicode
-		buffer[n++] = (data >> 8);
-		buffer[n++] = (data & 0xFF);
 	}
 	buffer[n] = '\0';
+	return n;
+}
+
+/**
+ * Translates a 2x16-bit UCS2 surrogate pair to its UTF8 variable-width equivalent.
+ * Lifted from https://github.com/DoctorMcKay/sourcemod-plugins/pull/1
+ * 
+ * @param highdata    A 16-bit value representing the high surrogate pair.
+ * @param lowdata     A 16-bit value representing the low surrogate pair.
+ * @param buffer      Buffer to store the result.  The result is up to four bytes comprising a
+ *                    single character, then a null terminator (for convenience in performing
+ *                    string operations).
+ * @return            Number of bytes in the character (excluding null terminator).  If reading
+ *                    failed, 0 is returned.
+ */
+stock int DecodeUTF16LESurrogatePair(int highdata, int lowdata, char buffer[5]) {
+	int n;
+	
+	int data = ((highdata - 0xD800) << 10) + (lowdata - 0xDC00) + 0x10000;
+	buffer[n++] = ((data >> 18) & 0x07) | 0xF0;
+	buffer[n++] = ((data >> 12) & 0x3F) | 0x80;
+	buffer[n++] = ((data >> 6) & 0x3F) | 0x80;
+	buffer[n++] = (data & 0x3F) | 0x80;
+	
 	return n;
 }
 
@@ -80,6 +101,17 @@ stock int ReadFileUTF16LEChar(File file, char buffer[5]) {
 	if (!file.ReadUint16(data)) {
 		return 0;
 	}
+	
+	// process high surrogate range here
+	if (0xD800 <= data <= 0xDFFF) {
+		int lowdata;
+		if (!file.ReadUint16(lowdata)) {
+			// previous char was a high surrogate marker but we EOF'd
+			return 0;
+		}
+		return DecodeUTF16LESurrogatePair(data, lowdata, buffer);
+	}
+	
 	return DecodeUTF16LEChar(data, buffer);
 }
 
@@ -328,7 +360,7 @@ enum struct TranslationFileParser {
 
 /**
  * Reads a language file quoted string.  The first character is expected to be part of the
- * output string.
+ * output string, provided it isn't the closing quote to end the string.
  */
 static TranslationFileParseResult ReadLanguageFileQuotedString(File file, char[] buffer,
 		int maxlen) {
