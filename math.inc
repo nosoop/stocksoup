@@ -15,6 +15,33 @@ stock float LerpFloat(float flPercent, float a, float b) {
 }
 
 /**
+ * Returns a value such that the distance between it to `c` and `d` is respectively proportional
+ * to the distance of `i` to `a` and `b`.  If `clamp` is true, then the returned value will be
+ * between `c` and `d`.
+ * 
+ * Special case:  If `a == b`, `c` will be returned if `i <= a`, `d` will be returned if
+ * `i > a`.  The value will always be clamped.
+ * 
+ * @param i        Input value.
+ * @param a        Input bound value.
+ * @param b        Input bound value.
+ * @param c        Output bound value corresponding to `a`.
+ * @param d        Output bound value corresponding to `b`.
+ * @param clamp    If set, the returned value is clamped to be between `c` and `d`.
+ */
+float RemapValueFloatEx(float i, float a, float b, float c, float d, bool clamp = false) {
+	if (a == b) {
+		return i > b ? d : c;
+	}
+	
+	float result = c + (d - c) * (i - a) / (b - a);
+	if (clamp) {
+		return ClampFloat(result, c, d);
+	}
+	return result;
+}
+
+/**
  * Scales the difference between `initial` to `current` by a factor of `scale`.
  * Completely missed the fact that LerpFloat does the same thing; this is now just present for
  * backwards compatibility.
