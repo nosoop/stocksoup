@@ -117,7 +117,7 @@ stock bool TF2_TranslateWeaponEntForClass(TFClassType playerClass, char[] classN
 	} else if (StrEqual(className, "saxxy")) {
 		static char SAXXY_CLASSES[][] = {
 			"saxxy", "tf_weapon_bat", "tf_weapon_club", "tf_weapon_shovel", "tf_weapon_bottle", 
-			"tf_weapon_bonesaw", "tf_weapon_fists", "tf_weapon_fireaxe", "tf_weapon_knife",
+			"tf_weapon_bonesaw", "tf_weapon_fireaxe", "tf_weapon_fireaxe", "tf_weapon_knife",
 			"tf_weapon_wrench"
 		};
 		
