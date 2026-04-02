@@ -30,7 +30,7 @@ stock int LoadStringFromAddress(Address addr, char[] buffer, int maxlen,
 	int c;
 	char ch;
 	do {
-		ch = LoadFromAddress(addr + view_as<Address>(c), NumberType_Int8);
+		ch = LoadFromAddress(addr + c, NumberType_Int8);
 		buffer[c] = ch;
 	} while (ch && ++c < maxlen - 1);
 	return c;
@@ -40,6 +40,6 @@ stock int LoadStringFromAddress(Address addr, char[] buffer, int maxlen,
  * Reads a value stored in a memory address and returns it as an address.
  */
 stock Address DereferencePointer(Address addr) {
-	// maybe someday we'll do 64-bit addresses
-	return view_as<Address>(LoadFromAddress(addr, NumberType_Int32));
+	// THE TIME IS NOW OLD MAN
+	return LoadAddressFromAddress(addr);
 }
