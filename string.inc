@@ -286,6 +286,8 @@ stock int StringToFloatArray(const char[] str, float[] arr, int length, int &byt
  */
 stock int StringToIntArray(const char[] str, int[] arr, int length, int &bytesread = 0,
 		int nBase = 10) {
+	#pragma unused length
+	
 	int n, c;
 	for (int i, res; (i = StringToIntEx(str[c], res, nBase)); c += i) {
 		arr[n++] = res;
