@@ -25,6 +25,10 @@ stock void LockConVar(ConVar convar) {
 	convar.AddChangeHook(__stocksoup_LockConVar);
 }
 
+stock void UnlockConVar(ConVar convar) {
+	convar.RemoveChangeHook(__stocksoup_LockConVar);
+}
+
 static stock void __stocksoup_LockConVar(ConVar convar, const char[] oldValue,
 		const char[] newValue) {
 	char defaultValue[64];
