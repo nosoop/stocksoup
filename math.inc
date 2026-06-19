@@ -29,7 +29,7 @@ stock float LerpFloat(float flPercent, float a, float b) {
  * @param d        Output bound value corresponding to `b`.
  * @param clamp    If set, the returned value is clamped to be between `c` and `d`.
  */
-float RemapValueFloatEx(float i, float a, float b, float c, float d, bool clamp = false) {
+stock float RemapValueFloatEx(float i, float a, float b, float c, float d, bool clamp = false) {
 	if (a == b) {
 		return i > b ? d : c;
 	}
