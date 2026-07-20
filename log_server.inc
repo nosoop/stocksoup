@@ -32,5 +32,7 @@ stock void LogServer(const char[] format, any ...) {
 	FormatTime(dateTime, sizeof(dateTime), NULL_STRING);
 	
 	PrintToServer("- %s: [%s] %s", dateTime, pluginName, message);
+    #else
+    #pragma unused format
 	#endif
 }
