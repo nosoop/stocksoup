@@ -141,7 +141,7 @@ static stock TFAnnotationEvent TF2_CreateStockAnnotation(const int[] clients, in
 	
 	if (annotation) {
 		int visbits;
-		for (int i = 0; i <= numClients; i++) {
+		for (int i = 0; i < numClients; i++) {
 			visbits |= 1 << clients[i];
 		}
 		annotation.VisibilityBits = visbits;
